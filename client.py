@@ -2,6 +2,7 @@ import os
 import socket
 import struct
 
+BLOCK_SIZE = 1024
 
 def send_file(sck: socket.socket, filename):
     # Get the size of the outgoing file.
@@ -13,7 +14,7 @@ def send_file(sck: socket.socket, filename):
     print(struct.pack("<Q", filesize)) # b'\x19\x00\x00\x00\x00\x00\x00\x00'
     # Send the file in 1024-bytes chunks.
     with open(filename, "rb") as f:
-        while read_bytes := f.read(1024):
+        while read_bytes := f.read(BLOCK_SIZE):
             sck.sendall(read_bytes)
 
 

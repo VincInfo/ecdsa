@@ -1,6 +1,7 @@
 import socket
 import struct
 
+BLOCK_SIZE = 1024
 
 def receive_file_size(sck: socket.socket):
     # This funcion makes sure that the bytes which indicate
@@ -35,7 +36,7 @@ def receive_file(sck: socket.socket, filename):
         # until reaching the total amount of bytes
         # that was informed by the client.
         while received_bytes < filesize:
-            chunk = sck.recv(1024)
+            chunk = sck.recv(BLOCK_SIZE)
             if chunk:
                 # print(chunk) # b'This is very confidential' (bytes literal, each character is a 8 bit value of UTF-8 or ASCII symbol)
                 f.write(chunk)
