@@ -1,8 +1,27 @@
 \section{explanation}
 This section explains the math behind ECDSA.
 \subsection{The Discrete Logarithm Problem}
-The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which it is derived from is also subject to other well known cryptographical algorithms such as the Diffie-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$. In more broader terms, this essentially states that given a generator $g$ and an element $h$ in a finite cyclic group $G$, find the integer $k$ such that $g^k = h$.
-\subsection{The Elliptic Curve Discrete Logarithm Problem}
-In case of ECC the cyclic group from the DLP can be thought of as a set of rational Points on an elliptic curve $E$ over a finite field $\mathbb{F}_p$ with $p$ being prime and $E$ representing the Weierstraß equation $$y^2=x^3+ax+b, a, b \in \mathbb{F}_p$$The set of rational points in $E$ over $\mathbb{F}_p$ denoted by $E(\mathbb{F}_p)$ can therefore be written as $$E(\mathbb{F}_p) = \{ (x, y) \in \mathbb{F}_p^2 : y^2 = x^3 + ax + b\} \cup \{O\}$$ The group operation of points in $E(\mathbb{F}_p)$, commonly denoted as addition, has a simple geometric interpretation. The Generator $G$ is the starting  point on $E$ and generates a cyclic subgroub $\langle G \rangle$ of order $n$ in $E(\mathbb{F}_p)$: $$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ $k$ is some large integer that defnies the number of times the group operation is performed on the generator $G$ such that $[k]G=P$ where $P \in \langle G \rangle$.
+The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which it is derived from is also subject to other well known cryptographical algorithms such as the Diffi e-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$. In more broader terms, this essentially states that given a generator $g$ and an element $h$ in a finite cyclic group $G$, find the integer $k$ such that $g^k = h$.
+\subsection{ECDSA Domain Parameters}
+In case of ECC the cyclic group from the DLP can be thought of as a set of rational Points on an elliptic curve $E$ over a finite field $\mathbb{F}_p$ with $p$ being prime and $E$ representing the Weierstraß equation
+$$y^2=x^3+ax+b, a, b \in \mathbb{F}_p$$
+The set of rational points in $E$ over $\mathbb{F}_p$ denoted by $E(\mathbb{F}_p)$ can then be written as 
+$$E(\mathbb{F}_p) = \{ (x, y) \in \mathbb{F}_p^2 : y^2 = x^3 + ax + b\} \cup \{O\}$$ 
+with $O$ being the point at infinity and representing the groups identity element. Why that is, one has to understand the group operation of elliptic curv groups.
+The group operation of points in $E(\mathbb{F}_p)$, commonly denoted as addition, has a simple geometric interpretation: 
+\begin{figure}
+\centering
+\includegraphics[width=.5\textwidth]{ecc-point-addition.jpg}
+\caption{title}
+\end{figure}
+The Generator $G$ is the starting  point on $E$ and generates a cyclic subgroub $\langle G \rangle$ of order $n$ in $E(\mathbb{F}_p)$: 
+$$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
+$k$ is some large integer that defnies the number of times the group operation is performed on the generator $G$ such that $[k]G=P$ where $P \in \langle G \rangle$.
+\subsection{calculating $x_r$ and $y_r$}
+$$\lambda = \frac{y_2-y_1}{x_2-x_1}, y-y_1=\lambda(x-x_1)$$
+$$y=\lambda x - \lambda x_1 + y_1, \beta=y_1-\lambda x_1, y=\lambda x + \beta$$
+$$(\lambda x + \beta)^2 = x^3 + ax + b$$
+$$x_3 = \lambda^2 - x_1 - x_2, y_3 = \lambda(x_1 - x_3) - y_1$$
+
 
  
