@@ -18,10 +18,30 @@ The Generator $G$ is the starting  point on $E$ and generates a cyclic subgroub 
 $$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
 $k$ is some large integer that defnies the number of times the group operation is performed on the generator $G$ such that $[k]G=P$ where $P \in \langle G \rangle$.
 \subsection{calculating $x_r$ and $y_r$}
+To perform the group operation on Points on the curve, the formulae for the $x_r$ and $y_r$ value of the resulting Point $R$ have to be derived. Therefore one has to distinguish between two cases. \newline
+1. The two points have different $x$ values\newline
+2. The two points have the same $x$ and $y$ values\newline
+Given two Points $P \in E(\mathbb{F}_p)$ and $Q \in E(\mathbb{F}_p)$ the values for $x_r$ and $y_r$ of the resulting point $R \in E(\mathbb{F}_p)$ can be calculated as follows:
 $$\lambda = \frac{y_2-y_1}{x_2-x_1}, y-y_1=\lambda(x-x_1)$$
 $$y=\lambda x - \lambda x_1 + y_1, \beta=y_1-\lambda x_1, y=\lambda x + \beta$$
 $$(\lambda x + \beta)^2 = x^3 + ax + b$$
-$$x_3 = \lambda^2 - x_1 - x_2, y_3 = \lambda(x_1 - x_3) - y_1$$
+$$0 = x^3 - \lambda^2x^2 - 2\lambda x \beta - \beta^2 + ax + b$$
+using Vietas formula for qubic polynomials we get:
+$$x_3 = \lambda^2 - x_1 - x_2$$
+and for $y$ after plugging in x in the first equation:
+$$y_3 = \lambda(x_1 - x_3) - y_1$$
+For the case in which the two Points are the same, whe simply calculate the tangent to the curve at the point by taking the devirative of e:
+$$\frac{dx}{dy} = \frac{d}{dy}(x^3+ax+b)^\frac{1}{2}$$
+$$\frac{dx}{dy} = \frac{3x^2 + a}{2\sqrt{x^3+ax+b}}$$
+and since $y^2 = x^3 + ax+b$ we can just substitute $y$ back in:
+$$\lambda = \frac{3x^2 + a}{2y}$$
+Since in this case the points $P$ and $Q$ are technically the same we get the following for $x$ by plugging in, while $y$ will stay the same:
+$$x_R = \lambda^2 - 2x_P, y_R = \lambda(x_P - x_R) - y_P$$
+
+
+
+ 
+
 
 
  
