@@ -1,22 +1,62 @@
 \section{Security Risks}
 The Elliptic Curve Digital Signature Algorithm (ECDSA) is a clever way of keeping our digital world secure. But, if we want to use ECDSA effectively, we need to pay attention to some of the challenges it brings, especially when it comes to how difficult it can be to implement because it's quite complex.
-\\
-ECDSA's strength comes from the complicated math it is based on, and it uses smaller but tough-to-crack keys. This helps to save on data space. However, this complexity can also make ECDSA tough to put into practice. If not implemented correctly, it can easily lead to security issues.
-\\
-In the following sections, we're going to explore two major challenges. We are going to explain the the potential pitfalls with bad random number generators, and the possibility of time-based attacks. We'll also provide possible solutions to mitigate these issues. Furthermore, we will present real-world examples of where such attacks have been successfully executed, providing a practical understanding of these concepts.
-\\
-It should be noted that ChatGPT has been used to generate the text in this section. Still, the information provided has been checked to be correct and where applicable, citations of researched scientific papers have been added.
-\subsection{Random Number Generator}
 
+ECDSA's strength comes from the complicated math it is based on, and it uses smaller but tough-to-crack keys. This helps to save on data space. However, this complexity can also make ECDSA tough to put into practice. If not implemented correctly, it can easily lead to security issues.
+
+In the following sections, we're going to explore two major challenges. We are going to explain the the potential pitfalls with bad random number generators, and the possibility of time-based attacks. We'll also provide possible solutions to mitigate these issues. Furthermore, we will present real-world examples of where such attacks have been successfully executed, providing a practical understanding of these concepts.
+
+It should be noted that we used ChatGPT to generate almost all of the text. Still, the information provided by ChatGPT has been checked to be correct. In (chatgpt table) we document where we had to correct ChatGPT. Where applicable, we added citations of fitting scientific papers which were researched beforehand.
+
+\subsection{Poor Random Number Generator}
+The nonce, or a "Number used ONCE," is a crucial component of ECDSA and contributes a significant layer of security. It must be unique and random for every signature to ensure the private key isn't revealed. However, the security of these nonces and, therefore, the overall encryption system heavily depends on the strength of the random number generator used. There are four key issues we need to consider while discussing the quality of random number generators: identical nonces, predictability, smallness and imbalance.
+
+\subsubsection{Identical Nonces}
+\label{subsubsection:identical}
+Reusing a nonce in multiple signatures is a significant security flaw. Even though the messages signed might be different, the fact that the same nonce was used provides an attacker with a critical amount of information. With two signatures sharing the same nonce but different messages, the private key can be calculated.
+
+To understand this, consider the ECDSA signature equation:
+
+\begin{equation} \label{eq:1}
+s = \frac{h(m) + r d}{k} \bmod q
+\end{equation}
+
+In this equation, k represents the nonce, h(m) is the hash of the message, d is the private key, r is the x-coordinate of the EC point r=kG, and q is the order of the elliptic curve's generator point G. If the same nonce (k) is used for two messages, m1 and m2, resulting in two signatures (r, s1) and (r, s2), notice that r, the x-coordinate, is the same for both since the same k was used.
+
+This presents a problem as it allows any observer to calculate the nonce (k) as:
+
+\begin{equation} \label{eq:2}
+k = \frac{h(m1) - h(m2)}{s1 - s2} \bmod q
+\end{equation}
+
+Once the nonce is known, the observer could afterwards calculate the private key (d) using the private key equation:
+
+\begin{equation} \label{eq:3}
+d = \frac{s k - h(m)}{r} \bmod q
+\end{equation}
+
+This means that the reusing of nonces can lead to the exposure of the private key. Hence, it's crucial to ensure that nonces are unique and not reused when generating ECDSA signatures to maintain a secure system. This includes the use of a proper random number generator, that cannot produce the same number twice.
+
+\subsubsection{Predictability}
+If an attacker can predict the next number generated from a specific algorithm, it instantly voids the security of the cryptographic operations relying on that algorithm. ECDSA, in particular, relies on the randomness of the nonces generated. Predictable nonces can enable an attacker to reverse-engineer and reveal the private key with equation \ref{eq:3} in section \ref{subsubsection:identical}. This vulnerability drastically undermines the effectivity of the ECDSA security protocol.
+
+In parallel, the same principle applies to the generation of keys. Keys should ideally be unique and unpredictable. However, if the pseudo-random number generator used for the key creation is compromised, it results in a production of predictable keys, rendering the entire security protocol ineffective. An attacker could potentially predict future keys and gain unauthorized access to sensitive data. However this concept is not unique to ECDSA and is not further explored in this paper.
 
 1. Risk: Random Number for ec used twice + bias in random numbers
-1.1 Small random number
-1.2 Same random number (also for two different private keys)
-1.3 Lattice Attacks
+1.1 Predictable random numbers
+1.2 Small random numbers
+1.3 Same random number (also for two different private keys)
+1.4 Biased random numbers
 2. Risk: Timing Attack
 
+%TODO: textits for equations, reference the chatgpt table, key for own key and same nonce
+
+ChatGPT Table:
+
+- ChatGPT didn't understand, that the problem of poor Random Number Generation in ECDSA lies primarily in the Nonces and not the Keys. Ensuring non-predictable numbers is still important for key generation, but this problem is not unique to ECDSA. This is important for any cryptographic application.
+- Surprisingly ChatGPT generated the mathematical equations for figuring out the private key from two given signatures generated with the same nonce correctly. Only the formating had to be adjusted to get a nice format.
 %https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
 %https://eprint.iacr.org/2019/023.pdf
 %https://eprint.iacr.org/2020/1506.pdf
 %https://eprint.iacr.org/2014/848.pdf (maybe)
+%https://eprint.iacr.org/2020/728.pdf (maybe)
 %https://eprint.iacr.org/2011/232.pdf
