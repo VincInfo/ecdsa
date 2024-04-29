@@ -1,10 +1,22 @@
 \section{Security Risks}
+The Elliptic Curve Digital Signature Algorithm (ECDSA) is a clever way of keeping our digital world secure. But, if we want to use ECDSA effectively, we need to pay attention to some of the challenges it brings, especially when it comes to how difficult it can be to implement because it's quite complex.
+\\
+ECDSA's strength comes from the complicated math it is based on, and it uses smaller but tough-to-crack keys. This helps to save on data space. However, this complexity can also make ECDSA tough to put into practice. If not implemented correctly, it can easily lead to security issues.
+\\
+In the following sections, we're going to explore two major challenges. We are going to explain the the potential pitfalls with bad random number generators, and the possibility of time-based attacks. We'll also provide possible solutions to mitigate these issues. Furthermore, we will present real-world examples of where such attacks have been successfully executed, providing a practical understanding of these concepts.
+\\
+It should be noted that ChatGPT has been used to generate the text in this section. Still, the information provided has been checked to be correct and where applicable, citations of researched scientific papers have been added.
+\subsection{Random Number Generator}
 
-0. Risk: Brute Force
+
 1. Risk: Random Number for ec used twice + bias in random numbers
+1.1 Small random number
+1.2 Same random number (also for two different private keys)
+1.3 Lattice Attacks
 2. Risk: Timing Attack
 
 %https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
 %https://eprint.iacr.org/2019/023.pdf
+%https://eprint.iacr.org/2020/1506.pdf
 %https://eprint.iacr.org/2014/848.pdf (maybe)
 %https://eprint.iacr.org/2011/232.pdf
