@@ -8,13 +8,13 @@ In the following sections, we're going to explore two major challenges. We are g
 It should be noted that we used ChatGPT to generate almost all of the text. Still, the information provided by ChatGPT has been checked to be correct. We used footnotes to document where we had to correct ChatGPT. Where applicable, we added citations of fitting scientific papers which were researched beforehand.
 
 \subsection{Poor Random Number Generator}
-The nonce, or a "Number used ONCE," is a crucial component of ECDSA and contributes a significant layer of security\footnote{Starting out, ChatGPT was overly concerned with predictability of generated keys. This is still important, but it is not a unique problem of random number generators to ECDSA. We had to clarify the issues with bad nonces.}. It must be unique and random for every signature to ensure the private key isn't revealed. However, the security of these nonces and, therefore, the overall encryption system heavily depends on the strength of the random number generator used. There are four key issues we need to consider while discussing the quality of random number generators for nonces: repetition, predictability, size and bias.
+The nonce, or a "Number used ONCE," is a crucial component of ECDSA and contributes a significant layer of security.\footnote{Starting out, ChatGPT was overly concerned with predictability of generated keys. This is still important, but it is not a unique problem of random number generators to ECDSA. We had to clarify the issues with bad nonces.} It must be unique and random for every signature to ensure the private key isn't revealed. However, the security of these nonces and, therefore, the overall encryption system heavily depends on the strength of the random number generator used. There are four key issues we need to consider while discussing the quality of random number generators for nonces: repetition, predictability, size and bias.
 
 \subsubsection{Repetition}
 \label{subsubsection:repetition}
 Reusing a nonce in multiple signatures is a significant security flaw. Even though the messages signed might be different, the fact that the same nonce was used provides an attacker with a critical amount of information. With two signatures sharing the same nonce but different messages, the private key can be calculated.
 
-To understand this, consider the ECDSA signature equation\footnote{Surprisingly ChatGPT generated these mathematical equations correctly. Only the formating had to be adjusted to get nice looking equations.}:
+To understand this, consider the ECDSA signature equation:\footnote{Surprisingly ChatGPT generated these mathematical equations correctly. Only the formating had to be adjusted to get nice looking equations.}
 
 \begin{equation} \label{eq:1}
 s = \frac{h(m) + r d}{k} \bmod q
