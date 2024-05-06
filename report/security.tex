@@ -45,7 +45,29 @@ In parallel, the same principle applies to the generation of keys. Keys should i
 When nonce values are of small sizes such as 64-bit or 128-bit, they are susceptible to cryptanalytic attacks. One possible attack is using Pollard's rho algorithm to solve for these small nonces. The algorithm can determine the discrete logarithm—that is, find the nonce—in a number of steps proportional to the square root of the size of the group. 64-bit or 128-bit nonces are small enough for a targeted attack to be feasible \cite{cryptoeprint:2019/023}. The solution to this issue is to simply to use Nonces that are bigger, for example 256-bit.
 
 \subsubsection{Bias}
+Sometimes there might be patterns or 'biases' in how the nonce is created. If these biases exist, they could potentially hint at what the nonce number is. If someone else can guess this nonce, they might infringe on our coded messages' security. Therefore, it is vital to understand these biases, their impacts, and how to avoid them in simple and practical terms. We will delve into this topic in the following section.
 
+In the ideal scenario, each nonce generated in ECDSA should be randomly unique. This means that it does not correlate with any other nonce and has no recognizable patterns. Ensuring complete randomness means the security of the system remains intact. However, if a part of the nonce remains the same across different computations — say, the first few or the last few digits don't change — this introduces a bias. This is problematic because it gives an attacker something to work with. By analyzing multiple signatures and exploiting these consistencies, they could derive the private key using these biases in the nonce generation. This can be achieved with the Hidden Number Problem (HNP).
+
+The HNP involves guessing a hidden number when you only have partial information or hints. Imagine you have a long number, but you only know some of the digits and the position of these digits in the number. The hidden part of the number would be the digits you do not know. The challenge of the HNP is to figure out these unknown digits \cite{cryptoeprint:2020/1506}.
+
+Relating it back to our scenario, an attacker who can determine a part of the nonce due to a bias can use this knowledge as a 'hint'. If they can obtain multiple signatures that contain these weak nonces, they can create a system of equations satisfying the HNP. By solving these equations, they aim to discover the unknown digits. In literature there are two techniques to solve the HNP: Lattice-based techniques and Fourier analysis \cite{cryptoeprint:2019/023}. The following paragraphs will explain how the former technique is used for extracting a key from a bias in the nonces. Fourier analysis is more complicated but it is more useful for more samples and smaller biases.
+
+In simple terms, a lattice is a grid formed by points in space. This grid is defined by a set of basis vectors. The main goal of lattice reduction is to find a new and shorter basis for the same lattice. When applied to the Hidden Number Problem, the aim is to use these simplified or reduced lattices to make the problem more manageable.
+
+So, let's say we have a series of signatures with a bias in their nonce values making a part of each nonce predictable. These partial nonces, along with the known signatures and public key, can be used to create a lattice in multi-dimensional space. In this lattice the solution is represented as a short vector. This vector is known to be close to a lattice point but not exactly on it. To find this short vector, a Lattice Basis Reduction algorithm is used, such as Lenstra-Lenstra-Lovasz (LLL) algorithm \cite{cryptoeprint:2019/023}\cite{cryptoeprint:2020/1506}.
+
+This results in a candiate value for the nonce and a possible private key can be calculated with the equation \ref{eq:3}. With this key the public key can be calculated and it can be compared with the actual public key. If the keys match, the private key is revealed \cite{cryptoeprint:2019/023}. More reading can be done on how the lattice is constructed in \cite{cryptoeprint:2020/1506}.
+
+It should be noted, that a non-uniform distribution of the nonce generation can also introduce a bias that can be exploited with this technique. Also it's worth mentioning that biases in nonces or even similar nonces can result in multiple security risks which include two different actors being able to find out the private key of the other one with there own private key. How these risks work is outlined in \cite{cryptoeprint:2014/848}. Therefore it is crucial for the random number generator to be uniform.
+
+\subsubsection{Secure Random Number Generator}
+A Cryptographically Secure Pseudorandom Number Generator should be used for Nonce generation. This ensures that the random number can't be predicted or backtracked, the values don't repeat and there is no bias in the numbers. Possible random number generators usable for proper nonce generation are EdDSA3 or RFC6979 \cite{cryptoeprint:2020/728}. This ensure there isn't any possible prediction, repetition or bias in the nonces.
+
+\subsubsection{Examples}
+The pitfall of repeated nonces has occured a few times in the past. At one point in the past, Sony used a fixed nonce to sign their software for the Playstation 3. Also the Java secure random generator had issues with the random number overlapping sometimes. As outlined in section \ref{subsubsection:repetition}, this allows for the private key to be calculated. In Sony's example this means that others could use the private key to sign their own software. In Java's cases this resulted in the leackage of various keys of bitcoin wallets.
+
+The exploitation of biases in nonces is explored in \cite{cryptoeprint:2019/023}\cite{cryptoeprint:2014/848}.
 1. Risk: Random Number for ec used twice + bias in random numbers
 1.1 Predictable random numbers
 1.2 Small random numbers
@@ -57,7 +79,6 @@ When nonce values are of small sizes such as 64-bit or 128-bit, they are suscept
 %https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
 %https://eprint.iacr.org/2019/023.pdf cryptoeprint:2019/023
 %https://eprint.iacr.org/2020/1506.pdf cryptoeprint:2020/1506
-%https://eprint.iacr.org/2020/1506.pdf
-%https://eprint.iacr.org/2014/848.pdf (maybe) cryptoeprint:2014/848
-%https://eprint.iacr.org/2020/728.pdf (maybe) cryptoeprint:2020/728
+%https://eprint.iacr.org/2014/848.pdf cryptoeprint:2014/848
+%https://eprint.iacr.org/2020/728.pdf cryptoeprint:2020/728
 %https://eprint.iacr.org/2011/232.pdf cryptoeprint:2011/232
