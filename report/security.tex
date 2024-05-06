@@ -39,12 +39,13 @@ This means that the reusing of nonces can lead to the exposure of the private ke
 \subsubsection{Predictability}
 If an attacker can predict the next number generated from a specific algorithm, it instantly voids the security of the cryptographic operations relying on that algorithm. ECDSA, in particular, relies on the randomness of the nonces generated. Predictable nonces can enable an attacker to reverse-engineer and reveal the private key with equation \ref{eq:3} in section \ref{subsubsection:repetition}. This vulnerability drastically undermines the effectivity of the ECDSA security protocol.
 
-In parallel, the same principle applies to the generation of keys. Keys should ideally be unique and unpredictable. However, if the pseudo-random number generator used for the key creation is compromised, it results in a production of predictable keys, rendering the entire security protocol ineffective. An attacker could potentially predict future keys and gain unauthorized access to sensitive data. However this concept is not unique to ECDSA and is not further explored in this paper.
+In parallel, the same principle applies to the generation of keys. Keys should ideally be unique and unpredictable. However, if the pseudo-random number generator used for the key creation is compromised, it results in a production of predictable keys, rendering the entire security protocol ineffective. An attacker could potentially predict future keys and gain unauthorized access to sensitive data. However this concept is not unique to ECDSA and is not further explored in this paper. A solution to this issue would be to use a random number generator that makes it impossible to predict its output.
 
 \subsubsection{Size}
-When nonce values are of small sizes such as 64-bit or 128-bit, they are susceptible to cryptanalytic attacks. One possible attack is using Pollard's rho algorithm to solve for these small nonces. The algorithm can determine the discrete logarithm—that is, find the nonce—in a number of steps proportional to the square root of the size of the group. 64-bit or 128-bit nonces are small enough for a targeted attack to be feasible \cite{cryptoeprint:2019/023}.
+When nonce values are of small sizes such as 64-bit or 128-bit, they are susceptible to cryptanalytic attacks. One possible attack is using Pollard's rho algorithm to solve for these small nonces. The algorithm can determine the discrete logarithm—that is, find the nonce—in a number of steps proportional to the square root of the size of the group. 64-bit or 128-bit nonces are small enough for a targeted attack to be feasible \cite{cryptoeprint:2019/023}. The solution to this issue is to simply to use Nonces that are bigger, for example 256-bit.
 
-It is important too use 
+\subsubsection{Bias}
+
 1. Risk: Random Number for ec used twice + bias in random numbers
 1.1 Predictable random numbers
 1.2 Small random numbers
@@ -56,6 +57,7 @@ It is important too use
 %https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
 %https://eprint.iacr.org/2019/023.pdf cryptoeprint:2019/023
 %https://eprint.iacr.org/2020/1506.pdf cryptoeprint:2020/1506
+%https://eprint.iacr.org/2020/1506.pdf
 %https://eprint.iacr.org/2014/848.pdf (maybe) cryptoeprint:2014/848
 %https://eprint.iacr.org/2020/728.pdf (maybe) cryptoeprint:2020/728
 %https://eprint.iacr.org/2011/232.pdf cryptoeprint:2011/232
