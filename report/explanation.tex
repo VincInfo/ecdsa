@@ -1,26 +1,42 @@
 \section{explanation}
 This section explains the math behind ECDSA.
+
 \subsection{The Discrete Logarithm Problem}
-The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which it is derived from is also subject to other well known cryptographical algorithms such as the Diffi e-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$. In more broader terms, this essentially states that given a generator $g$ and an element $h$ in a finite cyclic group $G$, find the integer $k$ such that $g^k = h$.
-\subsection{ECDSA Domain Parameters}
-In case of ECC the cyclic group from the DLP can be thought of as a set of rational Points on an elliptic curve $E$ over a finite field $\mathbb{F}_p$ with $p$ being prime and $E$ representing the Weierstraß equation
+The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which the ECDLP is derived from is also subject to other well known cryptographical algorithms such as the Diffie-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$. In more broader terms, this essentially states that given $g$ and $h$, find $k$ such that $g^k = h$.
+
+\subsection{Elliptic curve group}
+In case of ECC the cyclic group from the DLP can be thought of as a set of rational Points on an elliptic curve $E$ where $E$ represents the Weierstraß equation
 $$y^2=x^3+ax+b, a, b \in \mathbb{F}_p$$
+The curve $E$ is defined over a finite field $\mathbb{F}_p$ with $p$ being prime. This means that in ECC even though the curve $E$ is continuous only the Points $P$ where $x_P, y_P \in \mathbb{F}_p$ are of interest.\newline
 The set of rational points in $E$ over $\mathbb{F}_p$ denoted by $E(\mathbb{F}_p)$ can then be written as 
 $$E(\mathbb{F}_p) = \{ (x, y) \in \mathbb{F}_p^2 : y^2 = x^3 + ax + b\} \cup \{O\}$$ 
-with $O$ being the point at infinity and representing the groups identity element. Why that is, one has to understand the group operation of elliptic curv groups.
-The group operation of points in $E(\mathbb{F}_p)$, commonly denoted as addition, has a simple geometric interpretation: 
-\begin{figure}
+with $O$ being the point at infinity and representing the groups identity element. It becomes clear why that is once the group operation of $E(\mathbb{F}_p)$ is discussed in section 2.3. \newline
+The cyclic group of order $n$ ist then build by a generator point $G \in E(\mathbb{F}_p)$ by repeadetly applying the group operation, often denoted as addition:
+$$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
+$[k]G$ for example translate to $G+G+...+G+G$, $k$ times, where '$+$' displays the group operation.
+
+\subsection{Elliptic curve group operation}
+Let $P, Q \in E(\mathbb{F}_p)$ be Points on the elliptic curve. The group operation, often denoted as addition $P + Q$, has a simple geometric interpretation\newline
+If one were to draw a line $l$ through $P$ and $Q$, then $l$ would intersect the curve $E$ at a third point denoted as $R$. One then proceeds to reflect the point $R$ around the $x$-Axis. Since $E$ is symmetric around the $x$-Axis, the new reflected point $-R$ will also be on the curve. Hence the result of the operation $P+Q$ is $-R$. For the addition of two Points the following four cases have to be distinguished:
+\begin{enumerate}
+\item One of the Points is the identity element $O$: $P + O = P$. The line $l$ through $P$ and $O$ is vertical, since $O$ is the point at infinity. Therefore the point of intersection of $l$ and $E$ is the reflection of $P$, which means reflecting it one more time is $P$ itselfe.
+\item The two Points are not at infinity nor are they identical but have the same $x$-coordinates, aditionally one defines $O = -O$: $P + (-P) = O$. If the two Points have the same $x$-coordinates but are not identical, that means that they have the coordinates $P=(x_P, y_P)$ and $-P=(x_P,-y_P)$. The point of intersection and therefor its reflection as well will be at infinity.
+\item The two Points are not at infinity, nor do they have the same $x$-coordinates: $P + Q = -R$. In this case the line through $P$ and $Q$ is not vertical which means that it intersects the curve at a third point $R \ne O$
+\item The two Points are not at infinity and they are identical: $P + P = -R$. The line $l$ is the tangent to the curve $E$ in point $P$ and intersects $E$ in another point $R$. 
+\end{enumerate}
+\begin{figure}[!ht]
 \centering
 \includegraphics[width=.5\textwidth]{ecc-point-addition.jpg}
 \caption{title}
 \end{figure}
-The Generator $G$ is the starting  point on $E$ and generates a cyclic subgroub $\langle G \rangle$ of order $n$ in $E(\mathbb{F}_p)$: 
-$$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
-$k$ is some large integer that defnies the number of times the group operation is performed on the generator $G$ such that $[k]G=P$ where $P \in \langle G \rangle$.
+
 \subsection{calculating $x_r$ and $y_r$}
+In the cases 1 and 2 of section 2.3 the resulting points immediatly 
 To perform the group operation on Points on the curve, the formulae for the $x_r$ and $y_r$ value of the resulting Point $R$ have to be derived. Therefore one has to distinguish between two cases. \newline
-1. The two points have different $x$ values\newline
-2. The two points have the same $x$ and $y$ values\newline
+\begin{enumerate}
+\item The two points have different $x$ values\newline
+\item The two points have the same $x$ and $y$ values\newline
+\end{enumerate}
 Given two Points $P \in E(\mathbb{F}_p)$ and $Q \in E(\mathbb{F}_p)$ the values for $x_r$ and $y_r$ of the resulting point $R \in E(\mathbb{F}_p)$ can be calculated as follows:
 $$\lambda = \frac{y_2-y_1}{x_2-x_1}, y-y_1=\lambda(x-x_1)$$
 $$y=\lambda x - \lambda x_1 + y_1, \beta=y_1-\lambda x_1, y=\lambda x + \beta$$
@@ -37,31 +53,47 @@ and since $y^2 = x^3 + ax+b$ we can just substitute $y$ back in:
 $$\lambda = \frac{3x^2 + a}{2y}$$
 Since in this case the points $P$ and $Q$ are technically the same we get the following for $x$ by plugging in, while $y$ will stay the same:
 $$x_R = \lambda^2 - 2x_P, y_R = \lambda(x_P - x_R) - y_P$$
+
+\subsection{Elliptic curve domain parameters}
+// TODO: introduce the math to the actual application, what things are eschanged between sender and receiver and so on.
+
 \subsection{Key Pair Generation}
-Since the ECDSA resides in the realm of asynchronous cryptography, the cryptographic method is based on key pairs consisting of a public key P and a private key d. In case of ECDSA the goals is to prove the authenticity of the sender. Therefore the sender has a private key which he uses to sign the message to send. He also has a public key, which can be used by the receivers of the message, to verify that the message was signed with the corresponding private key and thus came from the expected sender. In the ECDSA the private key is an interger $d$ randomly chosen from the interval $\{1,2,...,n-1\}$ where $n$ is the group order of the cyclic group $G$. The public key $P$ is then generated by applying the group operation on the generator $G$ exactly $d$ times:
+Since the ECDSA resides in the realm of asynchronous cryptography, the cryptographic method is based on key pairs consisting of a public key $P$ and a private key $d$. In case of ECDSA the goal is to prove the authenticity of the sender. Therefore the sender owns a private key which he uses to sign the message to send. Furthermore there exists a public key, which can be used by the receivers of the message, to verify that the message was signed with the corresponding private key and thus came from the expected sender. In the ECDSA the private key is an interger $d$ randomly chosen from the interval $\{1,2,...,n-1\}$ where $n$ is the group order of the cyclic group $G$. The public key $P$ is then generated by applying the group operation on the generator $G$ exactly $d$ times:
 \begin{enumerate}
 \item choose private key $d = random(\{1,2,...,n-1\})$
 \item calculate public key $P = [d]G$
 \item output key pair $(d,P)$
 \end{enumerate}
+One might argue that the calculation of the public key $P$ in step 2 could be computationally very expensive since the group order $n$ is usually a large prime number, which means that $d$ could potentially be very large as well. Thankfully there is an efficient algorithm for computing scalar multiplication in groups with an operation that is both associative and commutative called double-and-add. Instead of iterating over all numbers from $0$ to $k$, in other words building $k$ by iteravely adding 1, you would build up k by eather adding 1 to the current number or doubling the current number. Suppose $k = 11$, instead of calculating $1\to2\to3\to4\to5\to6\to7\to8\to9\to10\to11$, you could just calculate  $1\to2\to4\to5\to10\to11$. But how does one determine when to add one and when to double? The Solution is to start from $k$ and divide by two when the current number is even, and substract one when it is odd.
+
 \subsection{Signature Generation}
 \begin{enumerate}
 \item $k = RNG(\{1,2,...,n-1\})$
 \item $Q = [k]G$
+$k$ is some large integer that defnies the number of times the group operation is performed on the generator $G$ such that $[k]G=P$ where $P \in \langle G \rangle$.
 \item $r = x_Q mod{n}$
 \item $k_{inv} = k^{-1} mod{n}$
 \item $s = k_{inv} * (r * d_A + H_r(M)) mod{n}$
 \item Output $(r,s)$
 \end{enumerate}
+
 \subsection{Signature Verification }
 \begin{enumerate}
-\item verify that $r, s \in \{1, 2, ..., n -1\}$
-\item calculate $s_{inv} = s^{-1} mod n$
-\item calculate $u_1=s_{inv} * H_r(M) mod{n}$ and $ u_2 = s_{inv} * r mod{n}$
-\item $Q = [u_1]G + [u_2]P_A$
+\item verify that $r, s \in \{1, 2, ..., n -1\}$\newline
+This requirement follows directly from the fact that $r$ and $s$ where calculated $mod{n}$ in the signature process. If $s$ and $r$ are not in the interval, the signature is invalid.
+\item calculate $z = H_{L_n}(M)$\newline
+$H_{L_n}(M)$ first calculates the hash of the message $M$ using a cryptographic hash function such as SHA-256 and then takes the $L_n$ leftmost bits of that hash. Here $L_n$ stands for the number of bits of the group oder $n$. This step is necessary in order to verify that the hash value of the received message and the hash value from the sender match, and thus the public key can be traced back to the signature. This indicates that the message has not bin altered during transmission.
+\item calculate $s_{inv} = s^{-1} mod n$\newline
+This step calculates the multiplicative inverse of $s$ modulo $n$. For the calculation the extenden euclidian algorithm can be used.
+\item calculate $u_1=s_{inv} *  z mod{n}$ and $ u_2 = s_{inv} * r mod{n}$\newline
+This is an inermedieate step that utilizes the values from steps 2 and 3 to calculate $u1$ and $u2$.
+\item $Q = [u_1]G + [u_2]P_A$\newline
+
 \item $v = x_Q mod{n}$
 \item Output true if $v =r$, and false otherwise
 \end{enumerate}
+\subsection{ECDLP vs DLP - why it is safer}
+
 
 
  
