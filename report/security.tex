@@ -45,6 +45,7 @@ In parallel, the same principle applies to the generation of keys. Keys should i
 When nonce values are of small sizes such as 64-bit or 128-bit, they are susceptible to cryptanalytic attacks. One possible attack is using Pollard's rho algorithm to solve for these small nonces. The algorithm can determine the discrete logarithm—that is, find the nonce—in a number of steps proportional to the square root of the size of the group. 64-bit or 128-bit nonces are small enough for a targeted attack to be feasible \cite{cryptoeprint:2019/023}. The solution to this issue is to simply to use Nonces that are bigger, for example 256-bit.
 
 \subsubsection{Bias}
+\label{subsubsection:bias}
 Sometimes there might be patterns or 'biases' in how the nonce is created. If these biases exist, they could potentially hint at what the nonce number is. If someone else can guess this nonce, they might infringe on our coded messages' security. Therefore, it is vital to understand these biases, their impacts, and how to avoid them in simple and practical terms. We will delve into this topic in the following section.
 
 In the ideal scenario, each nonce generated in ECDSA should be randomly unique. This means that it does not correlate with any other nonce and has no recognizable patterns. Ensuring complete randomness means the security of the system remains intact. However, if a part of the nonce remains the same across different computations — say, the first few or the last few digits don't change — this introduces a bias. This is problematic because it gives an attacker something to work with. By analyzing multiple signatures and exploiting these consistencies, they could derive the private key using these biases in the nonce generation. This can be achieved with the Hidden Number Problem (HNP).
@@ -61,13 +62,19 @@ This results in a candiate value for the nonce and a possible private key can be
 
 It should be noted, that a non-uniform distribution of the nonce generation can also introduce a bias that can be exploited with this technique. Also it's worth mentioning that biases in nonces or even similar nonces can result in multiple security risks which include two different actors being able to find out the private key of the other one with there own private key. How these risks work is outlined in \cite{cryptoeprint:2014/848}. Therefore it is crucial for the random number generator to be uniform.
 
-\subsubsection{Secure Random Number Generator}
-A Cryptographically Secure Pseudorandom Number Generator should be used for Nonce generation. This ensures that the random number can't be predicted or backtracked, the values don't repeat and there is no bias in the numbers. Possible random number generators usable for proper nonce generation are EdDSA3 or RFC6979 \cite{cryptoeprint:2020/728}. This ensure there isn't any possible prediction, repetition or bias in the nonces.
-
 \subsubsection{Examples}
-The pitfall of repeated nonces has occured a few times in the past. At one point in the past, Sony used a fixed nonce to sign their software for the Playstation 3. Also the Java secure random generator had issues with the random number overlapping sometimes. As outlined in section \ref{subsubsection:repetition}, this allows for the private key to be calculated. In Sony's example this means that others could use the private key to sign their own software. In Java's cases this resulted in the leackage of various keys of bitcoin wallets.
+The pitfall of repeated nonces has occured a few times in the past.\footnote{ChatGPT hasn't been used in this section. This is because } At one point in the past, Sony used a fixed nonce to sign their software for the Playstation 3 \cite{cryptoeprint:2020/728}. Also the Java secure random generator had issues with the random number overlapping sometimes \cite{cryptoeprint:2017/1014}. As outlined in section \ref{subsubsection:repetition}, this allows for the private key to be calculated. In Sony's example this means that others could use the private key to sign their own software. Java's number generator was implemented in some Android applications. This resulted in the leackage of various keys of bitcoin wallets \cite{cryptoeprint:2014/848}.
 
-The exploitation of biases in nonces is explored in \cite{cryptoeprint:2019/023}\cite{cryptoeprint:2014/848}.
+The exploitation of biases in nonces, or even small nonces, is explored in \cite{cryptoeprint:2019/023}. Biases in nonces, and even small nonces, occure in faulty ECDSA implementations used in cryptocurrency transactions. These issues can be exploited and some adresses of cryptocurrency wallets where already compromised. This can be done as described in section \ref{subsubsection:bias}. There are a few categories the faulty nonce generation fall into. First, there are very small nonces with 32 bits or less. Most of these nonces appear to be handcrafted. The next category are small nonces ranging from 64-bit to 160-bit. Also 256-bit nonces that share 128-bit suffixes have been exploited to find the private key used to sign the transaction with these faulty nonces. Of course this could be expanded or modified to exploit even smaller biases \cite{cryptoeprint:2019/023}.
+
+\subsubsection{Secure Random Number Generator}
+As seen in this section about nonce generation, a cryptographically secure pseudorandom number generator should be used for this purpose. This ensures that the random number can't be predicted or backtracked, the values don't repeat and there is no bias in the numbers. Possible random number generators usable for proper nonce generation are EdDSA3 or RFC6979 \cite{cryptoeprint:2020/728}. This ensure there isn't any possible prediction, repetition or bias in the nonces. Using a random number generator that doesn't ensure these issues aren't an issue will leave a huge security risk to the application using this faulty implementation of ECDSA.
+
+\subsection{Timing Attack}
+One possible type of attack that can happen is a timing attack. This attack focuses on how long it takes for the algorithm to work. By studying the time it takes to process information, one might be able to find confidential information that compromises the key. In this section, we'll be taking a look at how this type of attack works and how it can be prevented.
+
+
+
 1. Risk: Random Number for ec used twice + bias in random numbers
 1.1 Predictable random numbers
 1.2 Small random numbers
@@ -81,4 +88,5 @@ The exploitation of biases in nonces is explored in \cite{cryptoeprint:2019/023}
 %https://eprint.iacr.org/2020/1506.pdf cryptoeprint:2020/1506
 %https://eprint.iacr.org/2014/848.pdf cryptoeprint:2014/848
 %https://eprint.iacr.org/2020/728.pdf cryptoeprint:2020/728
+%https://eprint.iacr.org/2017/1014.pdf cryptoeprint:2017/1014
 %https://eprint.iacr.org/2011/232.pdf cryptoeprint:2011/232
