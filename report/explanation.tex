@@ -5,16 +5,16 @@ This section explains the math behind ECDSA.
 The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which the ECDLP is derived from is also subject to other well known cryptographical algorithms such as the Diffie-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$. In more broader terms, this essentially states that given $g$ and $h$, find $k$ such that $g^k = h$.
 
 \subsection{Elliptic curve group}
-In case of ECC the cyclic group from the DLP can be thought of as a set of Points on an elliptic curve $E$ where $E$ represents the Weierstraß equation
+In case of ECC the cyclic group from the ECDLP can be thought of as a set of Points on an elliptic curve $E$ where $E$ represents the Weierstraß equation
 $$y^2=x^3+ax+b, a, b \in \mathbb{F}_p, 4a^3 + 27b^2\ne0$$
 The curve $E$ is defined over a finite field $\mathbb{F}_p$ with $p$ being prime. This means that only the Points $P$ where $x_P, y_P \in \mathbb{F}_p$ are of interest.\newline
 The set of points in $E$ over $\mathbb{F}_p$ denoted by $E(\mathbb{F}_p)$ can then be written as 
 $$E(\mathbb{F}_p) = \{ (x, y) \in \mathbb{F}_p^2 : y^2 = x^3 + ax + b\} \cup \{O\}$$ 
 with $O$ being the point at infinity and representing the groups identity element. It becomes clear why that is once the group operation of $E(\mathbb{F}_p)$ is discussed in section 2.3. \newline
-The cyclic group of order $n$ ist then build by a generator point $G \in E(\mathbb{F}_p)$ by repeadetly applying the group operation, often denoted as addition:
+The cyclic group of order $n$ of  ist then build by a generator point $G \in E(\mathbb{F}_p)$ by repeadetly applying the group operation, often denoted as addition:
 $$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
-$[k]G$ for example translates to $G_1+G_2+...+G_{k-1}+G_k$, where '$+$' displays the group operation. Since $E$ is defined over the finie field $\mathbb{F}_p$ the group law is performed within the field by reducing the points modulo $p$. This bounds the points on the curve to integer coordinates within a $p \times p$ matrix.\newline 
- Suppose the elliptic curve $secp256k1$ used in bitcoin given by the following domain parameters in hexadecimal: 
+$[k]G$ for example translates to $G_1+G_2+...+G_{k-1}+G_k$, where '$+$' displays the group operation. Since $E$ is defined over the finie field $\mathbb{F}_p$ the group law is performed within this field by reducing the points modulo $p$. This bounds the points on the curve to integer coordinates within a $p \times p$ matrix.\newline 
+Suppose the elliptic curve $secp256k1$ used in bitcoin given by the following domain parameters in hexadecimal: 
 \begingroup
 \fontsize{10pt}{12pt}\selectfont
 \begin{verbatim}  
@@ -27,7 +27,7 @@ n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
 \end{verbatim}
 \endgroup
 \noindent
-Calculating $[60]G$, for example, generates a trace of seemingly randomly  distributed points, as depicted in figure 1.
+In the given setting, calculating $[k]G, k =60$, for example, generates a trace of seemingly randomly distributed points, as depicted in figure 1. In a real world setting $k$ would be a potentially large $256$-bit key.
 \begin{figure}[!h]
 \centering
 \includegraphics[width=.5\textwidth]{matplotlib-grouplaw-60iter.png}
