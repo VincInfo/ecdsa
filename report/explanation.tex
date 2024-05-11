@@ -6,102 +6,118 @@ The rising prevalence of elliptice curve cryptography (ECC) is predominantly cau
 
 \subsection{Elliptic curve group}
 In case of ECC the cyclic group from the DLP can be thought of as a set of Points on an elliptic curve $E$ where $E$ represents the Weierstraß equation
-$$y^2=x^3+ax+b, a, b \in \mathbb{F}_p$$
+$$y^2=x^3+ax+b, a, b \in \mathbb{F}_p, 4a^3 + 27b^2\ne0$$
 The curve $E$ is defined over a finite field $\mathbb{F}_p$ with $p$ being prime. This means that only the Points $P$ where $x_P, y_P \in \mathbb{F}_p$ are of interest.\newline
 The set of points in $E$ over $\mathbb{F}_p$ denoted by $E(\mathbb{F}_p)$ can then be written as 
 $$E(\mathbb{F}_p) = \{ (x, y) \in \mathbb{F}_p^2 : y^2 = x^3 + ax + b\} \cup \{O\}$$ 
 with $O$ being the point at infinity and representing the groups identity element. It becomes clear why that is once the group operation of $E(\mathbb{F}_p)$ is discussed in section 2.3. \newline
 The cyclic group of order $n$ ist then build by a generator point $G \in E(\mathbb{F}_p)$ by repeadetly applying the group operation, often denoted as addition:
 $$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
-$[k]G$ for example translates to $G_1+G_2+...+G_{k-1}+G_k$, where '$+$' displays the group operation.
+$[k]G$ for example translates to $G_1+G_2+...+G_{k-1}+G_k$, where '$+$' displays the group operation. Since $E$ is defined over the finie field $\mathbb{F}_p$ the group law is performed within the field by reducing the points modulo $p$. This bounds the points on the curve to integer coordinates within a $p \times p$ matrix.\newline 
+ Suppose the elliptic curve $secp256k1$ used in bitcoin given by the following domain parameters in hexadecimal: 
+\begingroup
+\fontsize{10pt}{12pt}\selectfont
+\begin{verbatim}  
+p = 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f
+a = 0x0000000000000000000000000000000000000000000000000000000000000000
+b = 0x0000000000000000000000000000000000000000000000000000000000000007
+Gx = 0x79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798
+Gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
+n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
+\end{verbatim}
+\endgroup
+\noindent
+result in a seemingly random distribution
+At its heart, the core priciple of elliptic curve cryptography lies in the fact that given the results of $[1]G$ and $[n]G$, finding $n$ is assumed to be infeasable.
 
 \subsection{Elliptic curve group operation}
-Let $P, Q \in E(\mathbb{F}_p)$ be Points on the elliptic curve. The group operation, often denoted as addition $P + Q$, has a simple geometric interpretation, as can be seen in figure 1.\newline
-If one were to draw a line $l$ through $P$ and $Q$, then $l$ would intersect the curve $E$ at a third point denoted as $R$. One then proceeds to reflect the point $R$ around the $x$-Axis. Since $E$ is symmetric around the $x$-Axis, the new reflected point $-R$ will also be on the curve. Hence the result of the operation $P+Q$ is $-R$. For the addition of two Points the following four cases have to be distinguished:
-\begin{enumerate}
-\item One of the Points is the identity element $O$: $P + O = P$. The line $l$ through $P$ and $O$ is vertical, since $O$ is the point at infinity. Therefore the point of intersection of $l$ and $E$ is the reflection of $P$, which means reflecting it one more time is $P$ itselfe.
-\item The two Points are not at infinity nor are they identical but have the same $x$-coordinates, aditionally one defines $O = -O$: $P + (-P) = O$. If the two Points have the same $x$-coordinates but are not identical, that means that they have the coordinates $P=(x_P, y_P)$ and $-P=(x_P,-y_P)$. The point of intersection and therefor its reflection as well will be at infinity.
-\item The two Points are not at infinity, nor do they have the same $x$-coordinates: $P + Q = -R$. In this case the line through $P$ and $Q$ is not vertical which means that it intersects the curve at a third point $R \ne O$.
-\item The two Points are not at infinity and they are identical: $P + P = -R$. The line $l$ is the tangent to the curve $E$ in point $P$ and intersects $E$ in another point $R$. 
-\end{enumerate}
-\begin{figure}[!ht]
-\centering
-\includegraphics[width=.5\textwidth]{group-operation-secp256k1.png}
-\caption{Group operation on elliptic curve $secp256k1$ used in bitcoin}
-\end{figure}
+	Let $P, Q \in E(\mathbb{F}_p)$ be Points on the elliptic curve. The group operation, often denoted as addition $P + Q$, has a simple geometric interpretation, as can be seen in figure 1.\newline
+	If one were to draw a line $l$ through $P$ and $Q$, then $l$ would intersect the curve $E$ at a third point denoted as $R$. One then proceeds to reflect the point $R$ around the $x$-Axis. Since $E$ is symmetric around the $x$-Axis, the new reflected point $-R$ will also be on the curve. Hence the result of the operation $P+Q$ is $-R$. For the addition of two Points the following four cases have to be distinguished:
+	\begin{enumerate}
+	\item One of the Points is the identity element $O$: $P + O = P$. The line $l$ through $P$ and $O$ is vertical, since $O$ is the point at infinity. Therefore the point of intersection of $l$ and $E$ is the reflection of $P$, which means reflecting it one more time is $P$ itselfe.
+	\item The two Points are not at infinity nor are they identical but have the same $x$-coordinates, aditionally one defines $O = -O$: $P + (-P) = O$. If the two Points have the same $x$-coordinates but are not identical, that means that they have the coordinates $P=(x_P, y_P)$ and $-P=(x_P,-y_P)$. The point of intersection and therefor its reflection as well will be at infinity.
+	\item The two Points are not at infinity, nor do they have the same $x$-coordinates: $P + Q = -R$. In this case the line through $P$ and $Q$ is not vertical which means that it intersects the curve at a third point $R \ne O$.
+	\item The two Points are not at infinity and they are identical: $P + P = -R$. The line $l$ is the tangent to the curve $E$ in point $P$ and intersects $E$ in another point $R$. 
+	\end{enumerate}
+	\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=.5\textwidth]{group-operation-secp256k1.png}
+	\caption{Group operation on elliptic curve $secp256k1$ used in bitcoin}
+	\end{figure}
 
 \subsection{calculating $x_r$ and $y_r$}
-In the cases 1 and 2 of section 2.3 the resulting points after the group operation are immediately obvious. Only in cases 3 and 4 the resulting points have to be actually calculated. 
-To perform the group operation on Points of these cases, the formulae for the $x_r$ and $y_r$ value of the resulting Point $R$ have to be derived.\newline
-Given two Points $P \in E(\mathbb{F}_p)$ and $Q \in E(\mathbb{F}_p)$ that comply with case 3 the values for $x_r$ and $y_r$ of the resulting point $R \in E(\mathbb{F}_p)$ can be calculated as follows:
-$$\lambda = \frac{y_p-y_q}{x_p-x_q}, y-y_q=\lambda(x-x_q)$$
-$$y=\lambda x - \lambda x_q + y_q, \beta=y_q-\lambda x_q, y=\lambda x + \beta$$
-$$(\lambda x + \beta)^2 = x^3 + ax + b$$
-$$0 = x^3 - \lambda^2x^2 - 2\lambda x \beta - \beta^2 + ax + b$$
-using Vietas formula for qubic polynomials we get:
-$$x_r = \lambda^2 - x_p - x_q$$
-and for $y$ after plugging in $x$ in the first equation:
-$$y_r = \lambda(x_p - x_r) - y_p$$
-In case 4 where $P$ and $Q$ are identical, the same formular for $x$ and $y$ can be used. Only the slope $\lambda$ is now obtained by taking the devirative of $e$:
-$$\frac{dx}{dy} = \frac{d}{dy}(x^3+ax+b)^\frac{1}{2}$$
-$$\frac{dx}{dy} = \frac{3x^2 + a}{2\sqrt{x^3+ax+b}}$$
-and since $y^2 = x^3 + ax+b$ we can just substitute $y$ back in:
-$$\lambda = \frac{3x^2 + a}{2y}$$
+	In the cases 1 and 2 of section 2.3 the resulting points after the group operation are immediately obvious. Only in cases 3 and 4 the resulting points have to be actually calculated. 
+	To perform the group operation on Points of these cases, the formulae for the $x_r$ and $y_r$ value of the resulting Point $R$ have to be derived.\newline
+	Given two Points $P \in E(\mathbb{F}_p)$ and $Q \in E(\mathbb{F}_p)$ that comply with case 3 the values for $x_r$ and $y_r$ of the resulting point $R \in E(\mathbb{F}_p)$ can be calculated as follows:
+	$$\lambda = \frac{y_p-y_q}{x_p-x_q}, y-y_q=\lambda(x-x_q)$$
+	$$y=\lambda x - \lambda x_q + y_q, \beta=y_q-\lambda x_q, y=\lambda x + \beta$$
+	$$(\lambda x + \beta)^2 = x^3 + ax + b$$
+	$$0 = x^3 - \lambda^2x^2 - 2\lambda x \beta - \beta^2 + ax + b$$
+	using Vietas formula for qubic polynomials we get:
+	$$x_r = \lambda^2 - x_p - x_q$$
+	and for $y$ after plugging in $x$ in the first equation:
+	$$y_r = \lambda(x_p - x_r) - y_p$$
+	In case 4 where $P$ and $Q$ are identical the procedure for calculating the $\lambda$ changes. The slope is now obtained by taking the devirative of $e$:
+	$$\frac{dx}{dy} = \frac{d}{dy}(x^3+ax+b)^\frac{1}{2}$$
+	$$\frac{dx}{dy} = \frac{3x^2 + a}{2\sqrt{x^3+ax+b}}$$
+	and since $y^2 = x^3 + ax+b$ we can just substitute $y$ back in:
+	$$\lambda = \frac{3x^2 + a}{2y}$$
 
 \subsection{Elliptic curve domain parameters}
 // TODO: introduce the math to the actual application, what things are eschanged between sender and receiver and so on.
 
 \subsection{Key Pair Generation}
-Since the ECDSA resides in the realm of asynchronous cryptography, the cryptographic method is based on key pairs consisting of a public key $P$ and a private key $d$. In case of ECDSA the goal is to prove the authenticity of the sender. Therefore the sender owns a private key which he uses to sign the message to send. Furthermore there exists a public key, which can be used by the receivers of the message, to verify that the message was signed with the corresponding private key and thus came from the expected sender. In the ECDSA the private key is an interger $d$ randomly chosen from the interval $\{1,2,...,n-1\}$ where $n$ is the group order of the cyclic group $G$. The public key $P$ is then generated by applying the group operation on the generator $G$ exactly $d$ times:
-\begin{enumerate}
-\item choose private key $d = random(\{1,2,...,n-1\})$
-\item calculate public key $P = [d]G$
-\item output key pair $(d,P)$
-\end{enumerate}
-One might argue that the calculation of the public key $P$ in step 2 could be computationally expensive since the group order $n$ is usually a large prime number, which means that $d$ could potentially be very large as well. Thankfully there is an efficient algorithm for computing scalar multiplication in groups with an operation that is both associative and commutative called double-and-add. Instead of iterating over all numbers from $0$ to $k$, in other words building $k$ by iteravely adding 1, you would build up k by eather adding 1 to the current number or doubling the current number. Suppose $k = 11$, instead of calculating $1\to2\to3\to4\to5\to6\to7\to8\to9\to10\to11$, you could just calculate  $1\to2\to4\to5\to10\to11$. But how does one determine when to add one and when to double? The Solution is to start from $k$ and divide by two when the current number is even, and substract one when it is odd. This demonstrates that the fact that $E(\mathbb{F}_p)$ carries group structure such that its group operation is both associative and commutative actually plays a crucial role in making elliptic curve cryptography applicable in the first place.
+	Since the ECDSA resides in the realm of asynchronous cryptography, the cryptographic method is based on key pairs consisting of a public key $P$ and a private key $d$. In case of ECDSA the goal is to prove the authenticity of the sender. Therefore the sender owns a private key which he uses to sign the message to send. Furthermore there exists a public key, which can be used by the receivers of the message, to verify that the message was signed with the corresponding private key and thus came from the expected sender. In the ECDSA the private key is an interger $d$ randomly chosen from the interval $\{1,2,...,n-1\}$ where $n$ is the group order of the cyclic group $G$. The public key $P$ is then generated by applying the group operation on the generator $G$ exactly $d$ times:
+	\begin{enumerate}
+	\item choose private key $d = random(\{1,2,...,n-1\})$
+	\item calculate public key $P = [d]G$
+	\item output key pair $(d,P)$
+	\end{enumerate}
+	One might argue that the calculation of the public key $P$ in step 2 could be computationally expensive since the group order $n$ is usually a large prime number, which means that $d$ could potentially be very large as well. Thankfully there is an efficient algorithm for computing scalar multiplication in groups with an operation that is both associative and commutative called double-and-add. Instead of iterating over all numbers from $0$ to $k$, in other words building $k$ by iteravely adding 1, you would build up k by eather adding 1 to the current number or doubling the current number. Suppose $k = 11$, instead of calculating $1\to2\to3\to4\to5\to6\to7\to8\to9\to10\to11$, you could just calculate  $1\to2\to4\to5\to10\to11$. But how does one determine when to add one and when to double? The Solution is to start from $k$ and divide by two when the current number is even, and substract one when it is odd. This demonstrates that the fact that $E(\mathbb{F}_p)$ carries group structure such that its group operation is both associative and commutative actually plays a crucial role in making elliptic curve cryptography applicable in the first place.
 
 \subsection{Signature Generation}
-\begin{enumerate}
-\item choose a $k = RNG(\{1,2,...,n-1\})$\newline
-The first step is to choose a random integer $k$ between $1$ and $n-1$ wich specifies the number of times the group operation is applied to the generator $G$ in the second step. As described in section () it is of utmost importance to choose a cryptographocally secure random number for $k$ or else the private key can be deduced.
-\item calculate $Q = [k]G$\newline
-The second step consists of applying the group operation as discussed in sections 2.3 and 2.4 to the generator $G$, $k$ times. As mentioned in section 2.6, in order to mitigate the computational cost of this operation the double-and-add algorithm is used for the scalar multiplication.
-\item calculate $r = x_Q mod{n}$\newline
-The $x$-coordinate of $Q$ is taken as part of the final signature. To conform the requirement that the values fall within 
-\item calculate $k_{inv} = k^{-1} mod{n}$\newline
-This step involves calculates the multiplicative inverse of $k mod n$ which will be usd in the final calculation in step 5.
-\item calculate $s = k_{inv} * (r * d_A + H_{L_n}(M)) mod{n}$\newline
-Here the second and therefore final component $s$ of the resulting signature is calculated. $d_A$ is the private key of the signer that was obtained in the key pair generation step. $H_{L_n}(M)$ first hashes the message $M$ to be signed and then takes the $L_n$ leftmost bits of that hash. Here $L_n$ stands for the number of bits of the group order $n$. Finally the value is being converted to an integer. The hashing adds an additional layer of security as it ensures the integrity of the message $m$. The entire term is then taken $mod n$ again to comply with the policy of the group order $n$.
-\item Output $(r,s)$\newline
-The final output of the signature algorithm the a pair of value $r$ and $s$.
-\end{enumerate}
+	\begin{enumerate}
+	\item choose a $k = RNG(\{1,2,...,n-1\})$\newline
+	The first step is to choose a random integer $k$ between $1$ and $n-1$ wich specifies the number of times the group operation is applied to the generator $G$ in the second step. As described in section () it is of utmost importance to choose a cryptographocally secure random number for $k$ or else the private key can be deduced.
+	\item calculate $Q = [k]G$\newline
+	The second step consists of applying the group operation as discussed in sections 2.3 and 2.4 to the generator $G$, $k$ times. As mentioned in section 2.6, in order to mitigate the computational cost of this operation the double-and-add algorithm is used for the scalar multiplication.
+	\item calculate $r = x_Q mod{n}$\newline
+	The $x$-coordinate of $Q$ is taken as part of the final signature. To conform the requirement that the values fall within 
+	\item calculate $k_{inv} = k^{-1} mod{n}$\newline
+	This step involves calculates the multiplicative inverse of $k mod n$ which will be usd in the final calculation in step 5.
+	\item calculate $s = k_{inv} * (r * d_A + H_{L_n}(M)) mod{n}$\newline
+	Here the second and therefore final component $s$ of the resulting signature is calculated. $d_A$ is the private key of the signer that was obtained in the key pair generation step. $H_{L_n}(M)$ first hashes the message $M$ to be signed and then takes the $L_n$ leftmost bits of that hash. Here $L_n$ stands for the number of bits of the group order $n$. Finally the value is being converted to an integer. The hashing adds an additional layer of security as it ensures the integrity of the message $m$. The entire term is then taken $mod n$ again to comply with the policy of the group order $n$.
+	\item Output $(r,s)$\newline
+	The final output of the signature algorithm the a pair of value $r$ and $s$.
+	\end{enumerate}
 
 \subsection{Signature Verification }
-\begin{enumerate}
-\item verify that $r, s \in \{1, 2, ..., n -1\}$\newline
-This requirement follows directly from the fact that $r$ and $s$ where calculated $mod{n}$ in the signature process. If $s$ and $r$ are not in the interval, the signature is invalid.
-\item calculate $z = H_{L_n}(M)$\newline
-$H_{L_n}(M)$ first calculates the hash of the message $M$ using a cryptographic hash function such as SHA-256 and then takes the $L_n$ leftmost bits of that hash. Here $L_n$ stands for the number of bits of the group oder $n$. This step is necessary in order to verify that the hash value of the received message and the hash value from the sender match, and thus the public key can be traced back to the signature. This indicates that the message has not bin altered during transmission.
-\item calculate $s_{inv} = s^{-1} mod n$\newline
-This step calculates the multiplicative inverse of $s$ modulo $n$. For the calculation the extenden euclidian algorithm can be used.
-\item calculate $u_1=s_{inv} *  z mod{n}$ and $ u_2 = s_{inv} * r mod{n}$\newline
-This is an inermedieate step that utilizes the values from steps 2 and 3 to calculate $u1$ and $u2$.
-\item $Q = [u_1]G + [u_2]P_A$\newline
-Finally calculate $Q$ by applying double-and-add scalar multiplication between $u_1$ and the generator $G$ as well as $u_2$ and the signers public key $P_A$. The obtained value for $Q$ is congruent $mod{n}$ with $Q$ from step 3 of the siganture generation process if the siganture is valid.
-The correctness of this calculation can be proven by simply plugging back in the values from steps 2, 3 and 4:
-\begin{enumerate}
-\item $kG = u_1G + u_2Q$
-\item $kG = s_{inv}zG + s_{inv}rQ$
-\item $kG = s^{-1}zG + s^{-1}rQ$
-\item $kG = s^{-1}zG + s^{-1}rdG$
-\item $kG = s^{-1}G(z + rd)$
-\item $s = k^{-1}(z + rd)$
-\end{enumerate}
-\item $v = x_Q mod{n}$\newline
-As in step 3 of the signature generation, only the $x$-coordinate of point $Q$ will be used for the final verification.
-\item Output true if $v =r$, and false otherwise\newline
-The signature verification algorithm returns true if $v$ from step 6 is equal to the signature value $r$ which is the $x$-coordinate of point $Q$ from the signature generation process.
-\end{enumerate}
+	\begin{enumerate}
+	\item verify that $r, s \in \{1, 2, ..., n -1\}$\newline
+	This requirement follows directly from the fact that $r$ and $s$ where calculated $mod{n}$ in the signature process. If $s$ and $r$ are not in the interval, the signature is invalid.
+	\item calculate $z = H_{L_n}(M)$\newline
+	$H_{L_n}(M)$ first calculates the hash of the message $M$ using a cryptographic hash function such as SHA-256 and then takes the $L_n$ leftmost bits of that hash. Here $L_n$ stands for the number of bits of the group oder $n$. This step is necessary in order to verify that the hash value of the received message and the hash value from the sender match, and thus the public key can be traced back to the signature. This indicates that the message has not bin altered during transmission.
+	\item calculate $s_{inv} = s^{-1} mod n$\newline
+	This step calculates the multiplicative inverse of $s$ modulo $n$. For the calculation the extenden euclidian algorithm can be used.
+	\item calculate $u_1=s_{inv} *  z mod{n}$ and $ u_2 = s_{inv} * r mod{n}$\newline
+	This is an inermedieate step that utilizes the values from steps 2 and 3 to calculate $u1$ and $u2$.
+	\item $Q = [u_1]G + [u_2]P_A$\newline
+	Finally calculate $Q$ by applying double-and-add scalar multiplication between $u_1$ and the generator $G$ as well as $u_2$ and the signers public key $P_A$. The obtained value for $Q$ is congruent $mod{n}$ with $Q$ from step 3 of the siganture generation process if the siganture is valid.
+	The correctness of this calculation can be proven by simply plugging back in the values from steps 2, 3 and 4:
+	\begin{enumerate}
+	\item $kG = u_1G + u_2Q$
+	\item $kG = s_{inv}zG + s_{inv}rQ$
+	\item $kG = s^{-1}zG + s^{-1}rQ$
+	\item $kG = s^{-1}zG + s^{-1}rdG$
+	\item $kG = s^{-1}G(z + rd)$
+	\item $s = k^{-1}(z + rd)$
+	\end{enumerate}
+	\item $v = x_Q mod{n}$\newline
+	As in step 3 of the signature generation, only the $x$-coordinate of point $Q$ will be used for the final verification.
+	\item Output true if $v =r$, and false otherwise\newline
+	The signature verification algorithm returns true if $v$ from step 6 is equal to the signature value $r$ which is the $x$-coordinate of point $Q$ from the signature generation process.
+	\end{enumerate}
+
 \subsection{ECDLP vs DLP - why it is safer}
 
 
