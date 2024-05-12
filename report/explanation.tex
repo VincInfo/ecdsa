@@ -51,7 +51,7 @@ At its heart, the core priciple of elliptic curve cryptography lies in the fact 
 
 \subsection{Elliptic curve group operation}
 	Let $P, Q \in E(\mathbb{F}_p)$ be Points on the elliptic curve. The group operation, often denoted as addition $P + Q$, has a simple geometric interpretation, as can be seen in figure 1.\newline
-	If one were to draw a line $l$ through $P$ and $Q$, then $l$ would intersect the curve $E$ at a third point denoted as $R$. One then proceeds to reflect the point $R$ around the $x$-Axis. Since $E$ is symmetric around the $x$-Axis, the new reflected point $-R$ will also be on the curve. Hence the result of the operation $P+Q$ is $-R$. For the addition of two Points the following four cases have to be distinguished:
+	If one were to draw a line $l$ through $P$ and $Q$, then $l$ would intersect the curve $E$ at a third point denoted as $-R$. One then proceeds to reflect the point $-R$ around the $x$-Axis. Since $E$ is symmetric around the $x$-Axis, the new reflected point $R$ will also be on the curve. Hence the result of the operation $P+Q$ is $R$. For the addition of two Points the following four cases have to be distinguished:
 	\begin{enumerate}
 	\item One of the Points is the identity element $O$: $P + O = P$. The line $l$ through $P$ and $O$ is vertical, since $O$ is the point at infinity. Therefore the point of intersection of $l$ and $E$ is the reflection of $P$, which means reflecting it one more time is $P$ itselfe.
 	\item The two Points are not at infinity nor are they identical but have the same $x$-coordinates, aditionally one defines $O = -O$: $P + (-P) = O$. If the two Points have the same $x$-coordinates but are not identical, that means that they have the coordinates $P=(x_P, y_P)$ and $-P=(x_P,-y_P)$. The point of intersection and therefor its reflection as well will be at infinity.
@@ -60,7 +60,7 @@ At its heart, the core priciple of elliptic curve cryptography lies in the fact 
 	\end{enumerate}
 	\begin{figure}[!ht]
 	\centering
-	\includegraphics[width=.5\textwidth]{group-operation-secp256k1.png}
+	\includegraphics[width=.5\textwidth]{group-operation-v3-secp256k1.png}
 	\caption{Group operation on elliptic curve $secp256k1$ used in bitcoin}
 	\end{figure}
 
