@@ -27,14 +27,27 @@ n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
 \end{verbatim}
 \endgroup
 \noindent
-In the given setting, calculating $[k]G, k =60$, for example, generates a trace of seemingly randomly distributed points, as depicted in figure 1. In a real world setting $k$ would be a potentially large $256$-bit key.
-\begin{figure}[!h]
-\centering
-\includegraphics[width=.5\textwidth]{matplotlib-grouplaw-60iter.png}
-\caption{Group operation on elliptic curve $secp256k1$ used in bitcoin}
+In the given setting, calculating $[k]G, k =60$, for example, generates a trace of seemingly randomly distributed points, as depicted in figure 1.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{matplotlib-grouplaw-60iter.png}
+        \caption{Caption for Figure 1}
+        \label{fig:figure1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{torus3.png}
+        \caption{Caption for Figure 2}
+        \label{fig:figure2}
+    \end{subfigure}
+    \caption{Overall caption}
+    \label{fig:overall}
 \end{figure}
 \newline
-At its heart, the core priciple of elliptic curve cryptography lies in the fact that given the results of $[1]G$ and $[n]G$, finding $n$ is assumed to be infeasable. This ... is called the ecdlp.
+At its heart, the core priciple of elliptic curve cryptography lies in the fact that given the results of $[1]G$ and $[k]G$, finding $k$ is assumed to be infeasable.  In a real world setting $k$ would be a potentially large $256$-bit key making . This ... is called the ecdlp.
 
 \subsection{Elliptic curve group operation}
 	Let $P, Q \in E(\mathbb{F}_p)$ be Points on the elliptic curve. The group operation, often denoted as addition $P + Q$, has a simple geometric interpretation, as can be seen in figure 1.\newline
