@@ -71,32 +71,18 @@ The exploitation of biases in nonces, or even small nonces, is explored in \cite
 As seen in this section about nonce generation it's important the nonce doesn't leave any security risks. The solution to this issue is to use a cryptographically secure pseudorandom number generator. This ensures that the random number can't be predicted or backtracked, the values don't repeat and there is no bias in the numbers. Possible random number generators usable for proper nonce generation are EdDSA3 or RFC6979 \cite{cryptoeprint:2020/728}. This ensures there isn't any possible prediction, repetition or bias in the generated nonces. Using a random number generator that doesn't ensure these issues aren't a problem will leave a huge security risk to the application using this faulty implementation of ECDSA.
 
 \subsection{Timing Attack}
-One possible type of attack that can happen is a timing attack. This attack focuses on how long it takes for the algorithm to work. By studying the time it takes to process information, the attacker might be able to find confidential information that compromises the key. This section is based on \cite{cryptoeprint:2011/232} and will look at how this type of attack works on ECDSA and how it can be prevented. \footnote{ChatGPT mixed up what part of signing allows timing attacks.}
-
-\subsubsection{Montgomery Ladder}
-Before we look at the specifics of getting the key from a timing attack, we'll have to understand the Montgomery Ladder. It is a method used within ECDSA to carry out scalar multiplication, a key operation in elliptic curve cryptography. The primary advantage of the Montgomery Ladder is that it runs in constant time, meaning it doesn’t leak information about the scalar (or key) through timing attacks. It also has the benefit of being efficient.
-
-The Montgomery Ladder operates using two points R0 and R1 on the curve, and these steps:
-
-1. Initialize R0 to the point at infinity (the equivalent of '0' on an elliptic curve) and R1 to the point you wish to multiply.
-
-2. Each bit 'b' of the scalar (from most significant to least significant) dictates the following operations:
-
-    - If 'b' is 0, then double R0 and add R1 to R0.
-    
-    - If 'b' is 1, then add R0 to R1 and double R1.
-    
-3. By the end of this process, R0 will have the value of the scalar multiplication.
-
-The security of this comes from its resistance to side channel attacks, since the steps are always the same for all bits of the scalar (making it difficult for an attacker to gain information about the scalar/key).
+One possible type of attack that can happen is a timing attack. This attack focuses on how long it takes for the algorithm to work. By studying the time it takes to process information, the attacker might be able to find confidential information that compromises the key. This section is based on \cite{cryptoeprint:2011/232} and will look at how this type of attack works on ECDSA and how it can be prevented.\footnote{ChatGPT is stupid and wasn't used in this section because it's really not that hard.}
 
 \subsubsection{Key Extraction}
+A timing attack could be possible because of a faulty implementation of the Montgomery Ladder for the ECDSA. It is a method used to carry out scalar multiplication on the eliptic curve. A simple explanation is found in section \ref{}. The algorithm iterates through the bits of the scalar and uses an efficient solution to double the number or add 1 to the number. This solution also takes the same amount of time regardless of if the bit is a 1 or a 0. This algorithm starts at the most significant bit that is a 1. The initial 0-bits have to be skipped because those don't have an effect on the point of the curve. An operation cannot be executed on the leading 0-bits.
 
-\subsubsection{Example}
+This poses a problem because this means the algorithm doens't run in constant time anymore. An attacker could take measurements of how long the signature generation takes. In this step a random nonce is used for scalar multiplication. If the leading bits of the nonce are 0 then the algorithm takes shorter to execute than expected because the leading 0-bits are ignored. With the multiple measurements the exact number of 0-bits can be figured out. This means that a certain prefix is known for a nonce associated with a signature. This Prefix is a bias and can be taken advantage of with a lattice attack as described in section \ref{subsubsection:bias}.
+
+Specifics on how the time is measured and how the lattice attack is performed can be found in the above mentioned paper that this section is based on. It should be noted that the lattice attack does allow for some error in the data and that with enough measurements the private key can be successfully revealed. The paper found this vulnerability in OpenSSL and provides a fix for the implementation. It was included in OpenSSL 1.0.0e.\footnote{OpenSSL Changelog: https://www.openssl.org/news/changelog.txt}
 
 \subsubsection{Solution}
+As outlined in the previous section the leading 0-bits can't be ignored because otherwise the algorithm wouldn't run in constant time which allows a side-channel attack. A solution to this issue is to guarantee that the scalar is a constant size. The oversimplified explanation is to add a 1 in front of the scalar to ensure the 0-bits are not ignored. In pratice this process is slightly more complicated because this would not result in the correct point on the curve. Instead the order of the curve is added to the scalar. If the resulting scalar still has the size of the order, the order is added another time. This results in a scalar that is always the same size. This is also the correct point on the curve because adding the order of the curve to a point on the curve results in the point iteself.
 
-%TODO: rename last subsubsection of rng
 %https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
 %https://eprint.iacr.org/2019/023.pdf cryptoeprint:2019/023
 %https://eprint.iacr.org/2020/1506.pdf cryptoeprint:2020/1506
@@ -104,3 +90,4 @@ The security of this comes from its resistance to side channel attacks, since th
 %https://eprint.iacr.org/2020/728.pdf cryptoeprint:2020/728
 %https://eprint.iacr.org/2017/1014.pdf cryptoeprint:2017/1014
 %https://eprint.iacr.org/2011/232.pdf cryptoeprint:2011/232
+%https://www.openssl.org/news/changelog.txt
