@@ -10,29 +10,29 @@ The nonce (number used once) is a crucial component of ECDSA and contributes a s
 
 \subsubsection{Repetition}
 \label{subsubsection:repetition}
-Reusing a nonce in multiple signatures is a significant security flaw. Even though the messages signed might be different, the fact that the same nonce was used provides an attacker with a critical amount of information. With two signatures sharing the same nonce but different messages, the private key can be calculated.
+Reusing a nonce in multiple signatures is a significant security flaw. Even though the messages signed might be different, the fact that the same nonce was used provides an attacker with a critical amount of information. With two signatures sharing the same nonce but different messages, the private key can be calculated \cite{cryptoeprint:2014/848}.
 
-To understand this, consider the ECDSA signature equation:\footnote{Surprisingly ChatGPT generated these mathematical equations correctly. Only the formating had to be adjusted to get nice looking equations.}
+To understand this, consider the ECDSA signature equation from section \ref{subsection:siggen}:\footnote{Surprisingly ChatGPT generated these mathematical equations correctly. Only the formating had to be adjusted to get nice looking equations.}
 
-\begin{equation}
+\begin{equation} \label{eq:sig}
 s = \frac{h(m) + r d}{k} \bmod q
 \end{equation}
 
 In this equation, \textit{k} represents the nonce, \textit{h(m)} is the hash of the message, \textit{d} is the private key, \textit{r} is the x-coordinate of the EC point \(r=kG\), and \textit{q} is the order of the elliptic curve's generator point \textit{G}. If the same nonce \textit{k} is used for two messages, \textit{m1} and \textit{m2}, resulting in two signatures \textit{(r, s1)} and \textit{(r, s2)}, notice that \textit{r}, the x-coordinate, is the same for both since the same \textit{k} was used.
 
-This presents a problem as it allows any observer to calculate the nonce \textit{k} as:
+This presents a problem as it allows any observer to calculate the nonce \textit{k}. This can be done by solving equation \ref{eq:sig} for \textit{r d}. For both signatures this value is equal. This results in the following equation for \textit{k}:
 
 \begin{equation}
 k = \frac{h(m1) - h(m2)}{s1 - s2} \bmod q
 \end{equation}
 
-Once the nonce is known, the observer could afterwards calculate the private key \textit{d} using the private key equation:
+The hashed message \textit{h(m)} and the signature \textit{s} is known and the nonce \textit{k} can be calculated. Once the nonce is known, the observer could afterwards calculate the private key \textit{d} using the private key equation derived from equation \ref{eq:sig}:
 
 \begin{equation} \label{eq:key}
 d = \frac{s k - h(m)}{r} \bmod q
 \end{equation}
 
-This means that the reusing of nonces can lead to the exposure of the private key. It's crucial to ensure that nonces are unique and not reused when generating ECDSA signatures to maintain a secure system. This includes the use of a proper random number generator, that cannot produce the same number twice.
+All of the values in this equation are now known and the private key \textit{d} is revealed. This means that the reusing of nonces can lead to the exposure of the private key. It's crucial to ensure that nonces are unique and not reused when generating ECDSA signatures to maintain a secure system. This includes the use of a proper random number generator, that cannot produce the same number twice.
 
 \subsubsection{Predictability}
 If an attacker can predict the next number generated from a specific algorithm, it instantly voids the security of the cryptographic operations relying on that algorithm. ECDSA, in particular, relies on the randomness of the nonces generated. Predictable nonces can enable an attacker to reverse-engineer and reveal the private key with equation \ref{eq:key} in section \ref{subsubsection:repetition}. This vulnerability drastically undermines the effectivity of the ECDSA security protocol.
@@ -50,7 +50,7 @@ In the ideal scenario, each nonce generated in ECDSA should be randomly unique. 
 
 The HNP involves guessing a hidden number when you only have partial information or hints. Imagine you have a long number, but you only know some of the digits and the position of these digits in the number. The hidden part of the number would be the digits you do not know. The challenge of the HNP is to figure out these unknown digits \cite{cryptoeprint:2020/1506}.
 
-Relating it back to our scenario, an attacker who can determine a part of the nonce due to a bias can use this knowledge as a 'hint'. If they can obtain multiple signatures that contain these weak nonces, they can create a system of equations satisfying the HNP. By solving these equations, they aim to discover the unknown digits. In literature there are two techniques to solve the HNP: Lattice-based techniques and Fourier analysis \cite{cryptoeprint:2019/023}. The following paragraphs will explain how the former technique is used for extracting a key from a bias in the nonces. Fourier analysis is more complicated but it is more useful for more samples and smaller biases.
+Relating it back to our scenario, an attacker who can determine a part of the nonce due to a bias can use this knowledge as a hint. If they can obtain multiple signatures that contain these weak nonces, they can create a system of equations satisfying the HNP. By solving these equations, they aim to discover the unknown digits. In literature there are two techniques to solve the HNP: Lattice-based techniques and Fourier analysis \cite{cryptoeprint:2019/023}. The following paragraphs will explain how the former technique is used for extracting a key from a bias in the nonces. Fourier analysis is more complicated but it is more useful for more samples and smaller biases.
 
 In simple terms, a lattice is a grid formed by points in space. This grid is defined by a set of basis vectors. The main goal of lattice reduction is to find a new and shorter basis for the same lattice. When applied to the Hidden Number Problem, the aim is to use these simplified or reduced lattices to make the problem more manageable.
 
@@ -72,7 +72,7 @@ As seen in this section about nonce generation it's important the nonce doesn't 
 One possible type of attack that can happen is a timing attack. This attack focuses on how long it takes for the algorithm to work. By studying the time it takes to process information, the attacker might be able to find confidential information that compromises the key. This section is based on \cite{cryptoeprint:2011/232} and will look at how this type of attack works on ECDSA and how it can be prevented.\footnote{ChatGPT is stupid and wasn't used in this section because it's really not that hard.}
 
 \subsubsection{Key Extraction}
-A timing attack could be possible because of a faulty implementation of the Montgomery Ladder for the ECDSA. It is a method used to carry out scalar multiplication on the eliptic curve. A simple explanation is found in section \ref{}. The algorithm iterates through the bits of the scalar and uses an efficient solution to double the number or add 1 to the number. This solution also takes the same amount of time regardless of if the bit is a 1 or a 0. This algorithm starts at the most significant bit that is a 1. The initial 0-bits have to be skipped because those don't have an effect on the point of the curve. An operation cannot be executed on the leading 0-bits.
+A timing attack could be possible because of a faulty implementation of the Montgomery Ladder for the ECDSA. It is a method used to carry out scalar multiplication on the eliptic curve. A simple explanation is found in section \ref{subsection:keygen}. The algorithm iterates through the bits of the scalar and uses an efficient solution to double the number or add 1 to the number. This solution also takes the same amount of time regardless of if the bit is a 1 or a 0. This algorithm starts at the most significant bit that is a 1. The initial 0-bits have to be skipped because those don't have an effect on the point of the curve. An operation cannot be executed on the leading 0-bits.
 
 This poses a problem because this means the algorithm doens't run in constant time anymore. An attacker could take measurements of how long the signature generation takes. In this step a random nonce is used for scalar multiplication. If the leading bits of the nonce are 0 then the algorithm takes shorter to execute than expected because the leading 0-bits are ignored. With the multiple measurements the exact number of 0-bits can be figured out. This means that a certain prefix is known for a nonce associated with a signature. This Prefix is a bias and can be taken advantage of with a lattice attack as described in section \ref{subsubsection:bias}.
 
