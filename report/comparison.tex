@@ -2,6 +2,20 @@
 
 % ----------------------------------------------------------------
 
+The three most popular digital signature algorithms RSA, DSA and ECDSA can be used to send information through insecure channels like open networks to ensure data integrity and authenticity. Each of these algorithms has unique characteristics which are suitable for different scenarios, depending on requirements like computational efficiency, key size, and security level.
+
+\subsection{RSA (Rivest–Shamir–Adleman)}
+
+RSA is an algorithm for public-key cryptography invented by Ron Rivest, Adi Shamir, and Leonard Adleman at MIT in 1977. It is the first known algorithm that can be used for both signing and encryption. RSA uses the approach of factoring large integers and employs a pair of keys: a public key for encryption (or verifying a signature) and a private key for decryption (or generating a signature). The signature generation process in RSA involves creating a hash of the message and producing a signature with the sender’s private key. Verification is achieved by decrypting the signature with the sender's private key and comparing it with a newly generated hash of the message that uses the same hash algorithm.
+
+RSA's security strength largely depends on the key size. Computational requirements for RSA are relatively high, especially for key generation and encryption processes, making it less efficient for devices
+with limited processing power.
+
+% * https://ieeexplore.ieee.org/document/5301198
+% ----------------------------------------------------------------
+
+% ----------------------------------------------------------------
+
 % * http://koclab.cs.ucsb.edu/teaching/ecc/project/2015Projects/Levy.pdf
 % * https://ieeexplore.ieee.org/document/5301198
 % ? https://libres.uncg.edu/ir/ecsu/f/Thomas_Johnson_Thesis-Final.pdf
