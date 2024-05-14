@@ -20,3 +20,22 @@ with limited processing power.
 % * https://ieeexplore.ieee.org/document/5301198
 % ? https://libres.uncg.edu/ir/ecsu/f/Thomas_Johnson_Thesis-Final.pdf
 % ----------------------------------------------------------------
+\subsection{DSA (Digital Signature Algorithm)}
+
+Developed by the National Institute of Standards and Technology (NIST) in 1991, DSA is specifically designed for digital signatures and does not support encryption. DSA relies on the discrete logarithm problem and generates a digital signature by creating a hash of the message, generating a random value, and computing two values that form the signature. Verification involves computing these values and ensuring they match the signature \cite{Xuan2009}.
+
+DSA’s key advantage is its efficiency in generating signatures, making it suitable for environments where signing speed is critical. However, its verification process is slower compared to RSA, which can be a drawback in scenarios requiring rapid signature verification \cite{Xuan2009}.
+
+\subsection{ECDSA (Elliptic Curve Digital Signature Algorithm)}
+
+ECDSA is a variant of the DSA that uses elliptic curve cryptography, offering equivalent security to RSA and DSA but with significantly smaller key sizes. This results in faster computations and reduced resource consumption, making ECDSA highly suitable for resource-constrained environments. ECDSA’s security is based on the elliptic curve discrete logarithm problem, which is currently considered resistant to most forms of cryptographic attack \cite{Xuan2009}.
+
+The process of generating an ECDSA signature involves creating a hash of the message, selecting a random integer, and performing elliptic curve point multiplication to produce the signature. Verification is achieved by performing elliptic curve operations and ensuring the calculated values match the signature \cite{Xuan2009}.
+
+\subsection{Comparative Summary}
+
+When comparing these algorithms, RSA is noted for its simplicity and widespread adoption, making it a reliable choice for signature verification tasks. However, its computational intensity for key generation can be a limitation on less powerful devices. DSA offers efficient signature generation but suffers from slower verification speeds, making it less ideal for applications requiring quick authentication \cite{Xuan2009}.
+
+ECDSA stands out due to its efficiency and smaller key sizes, providing strong security with lower computational requirements. This makes ECDSA particularly advantageous for environments where resource constraints are a critical consideration \cite{Xuan2009}.
+
+In conclusion, the optimal choice of a digital signature algorithm depends on the specific requirements of the application. For scenarios prioritizing verification speed, RSA is recommended. For efficient signature generation, DSA can be considered, though with a trade-off in verification speed. ECDSA is generally the best fit for applications needing a balanced approach with robust security and efficient performance \cite{Xuan2009, Levy2024}.
