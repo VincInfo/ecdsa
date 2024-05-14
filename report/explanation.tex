@@ -2,7 +2,7 @@
 This section explains the math behind ECDSA.
 
 \subsection{The Discrete Logarithm Problem}\label{sec:dlp}
-The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which the ECDLP is derived from is also subject to other well known cryptographical algorithms such as the Diffie-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$. In more broader terms, this essentially states that given $g$ and $h$, find $k$ such that $g^k = h$.
+The rising prevalence of elliptice curve cryptography (ECC) is predominantly caused by the strength-per-key-bit, which is substantially greater in algorithms that use this mathematical concept. In return, the increased stregth-per-key-bit and therefore higher security of ECC, is based on the hardness of the elliptic curve discrete logarithm problem (ECDLP), which is assumed to be computationally intractable. The more general discrete logarithm problem (DLP), which the ECDLP is derived from is also subject to other well known cryptographical algorithms such as the Diffie-Hellman key exchange. It is defined as follows: Let $G$ be a cyclic group of order $n$ with the generator $g$. The discrete logarithm of $h \in G$ to the base $g$, denoted by $\log_g(h)$, is the unique integer $k$, $0 \leq k \leq n-1$, such that $[k]g = h$\cite{bsi_ecdsa}. In more broader terms, this essentially states that given $g$ and $h$, find $k$ such that $g^k = h$.
 
 \subsection{Elliptic curve group}\label{sec:ec_group}
 In case of ECC the cyclic group from the ECDLP can be thought of as a set of Points on an elliptic curve $E$ where $E$ represents the Weierstraß equation
@@ -14,7 +14,7 @@ with $O$ being the point at infinity and representing the groups identity elemen
 The cyclic group of order $n$ is then build by a generator point $G \in E(\mathbb{F}_p)$ by repeadetly applying the group operation, often denoted as addition:
 $$\langle G \rangle = \{[1]G, [2]G, [3]G, ..., [n-1]G, [n]G\}$$ 
 $[k]G$ for example translates to $G_1+G_2+...+G_{k-1}+G_k$, where '$+$' displays the group operation. Since $E$ is defined over the finie field $\mathbb{F}_p$ the group law is performed within this field by reducing the points modulo $p$. This bounds the points on the curve to integer coordinates within a $p \times p$ matrix\cite{bsi_ecdsa}.\newline 
-\indent Suppose the elliptic curve $secp256k1$ used in bitcoin given by the following domain parameters in hexadecimal\cite{10326102}: 
+\indent Suppose the elliptic curve $secp256k1$ used in bitcoin given by the following domain parameters in hexadecimal proposed in \cite{10326102}: 
 \begingroup
 \fontsize{10pt}{12pt}\selectfont
 \begin{verbatim}  
@@ -26,7 +26,7 @@ Gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
 n = 0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141
 \end{verbatim}
 \endgroup
-The corresponding curve can be seen in figure \ref{fig:figure3}. In the given setting, calculating $[k]G, k =60$, for example, generates a trace of seemingly randomly distributed points, as depicted in figure \ref{fig:figure1}. Since both the $x$ and $y$-coordinates of the points are reduced modulo $p$, they can also be thought of as points on a torus. This can be seen in figure \ref{fig:figure2}.
+The corresponding curve can be seen in figure \ref{fig:figure3}. In the given setting, calculating $[k]G, k =60$, for example, generates a trace of seemingly randomly distributed points, as depicted in figure \ref{fig:figure1}. Since both the $x$ and $y$-coordinates of the points are reduced modulo $p$, they can also be thought of as points on a torus. The torus arises by firstly reducing $x mod p$, which leads to a cylinder and then reducing $y mod p$ which finally results in the torus. This can be seen in figure \ref{fig:figure2}.
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}[b]{0.45\linewidth}
@@ -46,7 +46,7 @@ The corresponding curve can be seen in figure \ref{fig:figure3}. In the given se
     \label{fig:overall}
 \end{figure}
 \newline
-At its heart, the core priciple of elliptic curve cryptography lies in the fact that given the results of $[1]G$ and $[k]G$, finding $k$ is assumed to be infeasable.  In a real world setting $k$ would be a potentially large $256$-bit key making an exhaustive search for its value completely inefficient. This problem describes the ecdlp.
+At its heart, the core priciple of elliptic curve cryptography lies in the fact that given the results of $[1]G$ and $[k]G$, finding $k$ is assumed to be infeasable.  In a real world setting such as the implementation of bitcoin $k$ would be a potentially large $256$-bit key making an exhaustive search for its value completely inefficient. This problem describes the ecdlp.
 
 \subsection{Elliptic curve group operation}\label{sec:group_law}
 	Let $P, Q \in E(\mathbb{F}_p)$ be Points on the elliptic curve. The group operation, often denoted as addition $P + Q$, has a simple geometric interpretation, as can be seen in figure \ref{fig:figure3}.\newline
@@ -139,8 +139,21 @@ The signature verification process is performed by the reiceivers of our message
 	\end{enumerate}
 
 \subsection{ECDLP vs DLP - why it is safer}\label{sec:ecdlp_vs_dlp}
+when trying to explore... hard because there is no proof ... over the years gained trust in the robustness of ecc because of it being exposed to all of the worlds genius hackers and cryptographers for a long time. That of course implies complying with the specifications for standartized curves and cryptographically strong domain parameters\cite{bsi_ecdsa}. One reasonable approach to understanding why elliptic curve cryptography is actually secure is to understand why the currently best known algorithm for solving the DLP which the ECDLP is derived from is not practical on the ECDLP. A natural subsequend step would be to discuss the currently best known algorithms to solve the ECDLP and why they have a higher time complexity than the algorithms known for the DLP. We will focus on general attacks that do not exploit any kind of special properties of the given elliptic curve setting.
+
 currently best known algo is slower that that for DLP
 and index calculus is not applicable
+
+Notes:
+applicable algos for DLP
+applicable algos for ECDLP with normal curves like Secp256k1: BSGS, Pollard's rho
+
+\subsubsection{General Number Field Sieve}
+\subsubsection{Index Calculus}
+
+\subsubsection{Pollard's Rho-Algorithmus}
+\subsubsection{Baby Step Giant Step}
+The BSGS attack solves the ECDLP in $O(\sqrt{n})$ time -and space complexity making it relatively memory exhaustive compared to the other algorithms. Let $\langle G \rangle$ be a cyclic group with the generator $G$. Suppose $G$ has order $n$ and let $P \in \langle G \rangle $. Additionally define $m = \lceil \sqrt{n} \rceil$. Suppose the ECDLP we want to solve consists of finding $x$ such that $[x]G = P$. According to the eucledian algorithm we can then rewrite $x$ (like any other integer as well) as a linear combination $x =  m * i + j$ with $i, j \in [0, m-1]$. The clue behind BSGS is now thanks to the new representation of $x$  we can split up $[x]G$ into the two seperate terms $[x]G = [mi]G + [j]G$ and therefore have $[mi]G + [j]G = P$. After rearranging this equation to $[j]G = P - [mi]G$ the main calculation starts. We first calculate the list $[j]G$ for $0 \le j < m$ and store it (hence the space complexity of $O(\sqrt{n})$). We then start to calculate  $P - [mi]G$ for  $0 \le i < m$ and each time check if the value is contained in the stored list. If a match is found, so is $x$ since we then know $i$ and $j$ while $m$ is a constant anyways and we therefore can compute $x \equiv m*i + j \mod n$. Since we iterate over $0 \le j,i < m$ respectively while $m = \sqrt{n}$ whe have a time complexity of $O(2 * (\sqrt{n} - 1)) = O(\sqrt{n})$ \cite{article}.
 
 
  
