@@ -3,13 +3,63 @@
 % ----------------------------------------------------------------
 \subsection{Electronic-Health}
 
+Electronic Health (E-health) services facilitate the sharing of medical records between healthcare providers and patients across different healthcare facilities. These services improve patient care by enabling efficient electronic sharing of medical data, enhancing accessibility for healthcare providers and patients. E-health encompasses systems like Electronic Health Records (EHR), Electronic Medical Records (EMR), and Personal Health Records (PHR), which facilitate global or local sharing of medical records and are managed either by healthcare providers or patients.
+
+However, E-health systems face challenges such as computational complexity, resource constraints, precision management, and mobility issues. A significant concern is the privacy of patients' data during transmission over insecure networks like the Internet and wireless networks. Data privacy is crucial for E-health applications and requires security mechanisms like authorization policies, encryption algorithms, and robust signatures to safeguard medical repositories from malicious attacks.
+
+Various security threats have targeted E-health systems, compromising patient data. To address these vulnerabilities, efforts are needed to secure health data effectively. Healthcare organizations and regulations like the Health Insurance Portability and Accountability Act (HIPAA) recommend implementing security and privacy measures in E-health applications to mitigate security threats.
+
+Ensuring the accuracy of medical data is vital for diagnosing diseases and assessing patients' conditions during transmission from clients to healthcare providers. Penetration of medical data can lead to serious consequences such as harassment, discrimination, or even patient death if the data is altered during transmission.
+
+To enhance security and efficiency in E-health applications, modern projects employ the Elliptic Curve Digital Signature Algorithm (ECDSA). ECDSA signatures, coupled with energy-efficient techniques, are used for monitoring patients' conditions through Wireless Sensor Networks (WSNs) in E-health. Additionally, ECDSA is utilized in schemes to protect patients' information in collaborating cloud healthcare systems and to provide mutual authentication in the protection of medical records, thereby preventing various security threats like man-in-the-middle attacks, tracking, eavesdropping, impersonation, replay, and cloning.
+
 \subsection{Electronic-Banking}
+
+Electronic Banking (E-banking) relies on personal information to authorize access to bank accounts through various channels such as online banking, mobile banking, credit cards, and automated teller machines (ATMs). Security measures are crucial to prevent hackers and internet thieves from compromising customers' confidential information and accounts.
+
+Authentication of legitimate users is paramount in E-banking applications due to the persistent threat of hacking. Various security threats have targeted E-banking systems, including attacks on banking websites, Distributed Denial of Service (DDoS) attacks, and breaches resulting in unauthorized access to millions of user accounts.
+
+Traditional authentication systems based on username/password are deemed inadequate in the current era. Therefore, there is a growing adoption of ECDSA signatures in modern E-banking applications to enhance security. Researchers have proposed schemes leveraging ECDSA to authenticate customers and protect against a range of attacks such as phishing, shoulder surfing, keyloggers, and password-related attacks.
+
+One proposed scheme employs ECDSA (256-bit) with SHA-256 to sign tickets, implementing security mechanisms like one-time usernames, session keys, ticket validity periods, timestamps, and account permissions. This scheme aims to prevent the reuse of credentials and offers robust protection against various attack vectors.
+
+Another approach integrates ECDSA (p224) with the Elliptic Curve Integrated Encryption Scheme (ECIES) to protect bank messages exchanged between customers and E-banking applications. This model facilitates authentication, transaction, and notification stages, ensuring end-to-end communication security and defending against attacks like wifi sniffing, reflection, replay, man-in-the-middle, phishing, and impersonation.
+
+The adoption of ECC/ECDSA algorithms in E-banking applications is favored due to their high performance, utilizing small keys and efficient computation costs compared to other public key algorithms such as RSA, DSA, and DH.
 
 \subsection{Electronic-Commerce}
 
+Electronic Commerce (E-commerce) is a significant platform for conducting business transactions, sharing information, and buying/selling electronic products and applications via the internet. While the internet has brought numerous benefits, it has also introduced security risks, particularly hacking threats targeting personal and sensitive information for malicious gains.
+
+The rapid development of technology in E-commerce has amplified security risks, necessitating secure signature algorithms capable of handling high volumes of transactions efficiently. Security threats in E-commerce include credential replay attacks, phishing attacks, and Distributed Denial of Service (DDoS) attacks, which pose significant challenges to the integrity and security of online transactions.
+
+To address these security challenges, E-commerce platforms employ various currency signing systems such as Bitcoin, Litecoin, Freicoin, and Peercoin, most of which utilize ECDSA signatures to ensure authentication, integrity, and non-repudiation of transactions.
+
+Researchers have proposed schemes to enhance the security of E-commerce and online transactions, including the development of a graphic processing unit-universal elliptic curve signature server (Guess) using the ECDSA signature mechanism. This scheme aims to provide high-performance signature computations and secure e-payment over the internet, addressing authentication issues between tenants and the server.
+
+Additionally, ECDSA is utilized in implementing two-factor authentication with E-commerce applications, such as Bitcoin wallets, to enhance security and prevent malicious attacks. Randomization techniques are crucial in preventing attackers from discovering secret keys in ECDSA, ensuring the security and integrity of online transactions.
+
 \subsection{Electronic-Vehicular}
 
+Vehicular Ad hoc Networks (VANETs) are essential for ensuring road safety by facilitating communication among vehicles, including police, emergency, and smart taxi cars. VANET applications aim to regulate network traffic, prevent accidents, and enforce road laws, with a focus on protecting passengers. VANET operates through vehicle-to-vehicle (V2V) and vehicle-to-infrastructure (V2I) communication.
+
+Security is a significant challenge for VANET applications due to the open medium in which network nodes share information. To mitigate risks, encryption and signature mechanisms are employed to protect message integrity and authenticity. Various attacks threaten VANET applications, including impersonation, Sybil, modification, DDoS, and replay attacks, necessitating the implementation of confidentiality, integrity, and availability (CIA) security requirements.
+
+The ECDSA algorithm is utilized to authenticate messages within VANET, providing integrity, authentication, and non-repudiation suitable for constrained-source networks. Security analyses have been conducted on ECDSA with VANET applications, focusing on key lengths and curve types to ensure efficiency and adequate security. Additionally, privacy concerns regarding location information and identity in VANET applications are addressed through authentication methods based on ECDSA signatures with pseudonyms, ensuring anonymity and protection against various malicious attacks.
+
 \subsection{Electronic-Governance}
+
+E-governance facilitates the delivery of services to stakeholders through various communication technologies like the internet, SMS, and email, streamlining processes for citizens, businesses, and government agencies. These applications handle four types of transactions: government to citizens (G2C), government to business (G2B), government to employee (G2E), and government to government (G2G), catering to diverse stakeholder data.
+
+The adoption of e-governance applications requires meeting high citizen confidence levels through flexibility, transparency, accountability, manageability, good governance, and trustworthy (security and privacy) services. However, the security and privacy of stakeholders' data are major concerns against hacking attacks due to the diverse pool of databases involved.
+
+Various security risks, including attacks like Denial of Service (DOS), insider threats, impersonation, replay attacks, and offline password guessing, pose significant challenges to e-governance applications. To secure citizen data, security measures encompass server security, network security, data security, workstation security, and physical/environmental security.
+
+Advanced countries such as the USA, UK, and NATO members utilize ECC/ECDSA to secure citizen data and ensure interoperability between governments, protecting against data fraud attacks and ensuring internal communications' security.
+
+Efficient digital signatures, such as ECDSA, authenticate stakeholders in e-governance systems, providing a robust e-authentication mechanism for citizens to safely handle government documents. Despite leveraging technologies like cloud computing and Big Data to manage large datasets, developers face challenges in ensuring security and privacy.
+
+Proposals include applying ECDSA signatures to protect cloud computing data and utilizing ECC/ECDSA as the best algorithm for signing and encrypting sensitive data transmitted through e-governance applications. While there's no single countermeasure to block all hacker attacks, a combination of countermeasures is necessary to secure data sharing effectively.
 
 
 
@@ -28,6 +78,14 @@
 
 \subsection{Signing PDF Documents}
 
+The Portable Document Format (PDF) is widely used for document management, including digital signatures. Digital signatures are increasingly important as more aspects of life transition to digital formats. Despite the growing significance, PDF standards didn't support Elliptic Curve Digital Signature Algorithm (ECDSA) until PDF 2.0. While PDF 2.0 introduces ECDSA support, commonly used PDF applications are yet to fully adopt this standard.
+
+Adobe Acrobat, a leading PDF application, has supported ECDSA signatures since version 11.0, despite the PDF standard's delay in incorporating ECDSA. Adobe's support serves as a de facto reference for other PDF tools and applications.
+
+Although ECDSA implementations are primarily aimed at the cryptocurrency ecosystem, they are adaptable for broader use. However, the choice of elliptic curve is crucial. While many implementations default to secp256k1, used in Bitcoin and Ethereum, PDF requirements necessitate using curves like P-256. Implementations that support P-256, such as ZenGo X, enable ECDSA signatures for PDF documents.
+
+Adjusting implementations for PDF signing, particularly changing the curve to P-256, is feasible and relatively straightforward.
+
 % ? https://is.muni.cz/th/fuwu0/thesis.pdf 
 % ----------------------------------------------------------------
 
@@ -42,8 +100,18 @@
 % ----------------------------------------------------------------
 
 \subsection{Blockchain}
+
+Blockchain is best exemplified by Bitcoin, a decentralized digital currency allowing direct peer-to-peer transactions without intermediaries. Transactions are recorded in a ledger forming a chain, with each entity having a hash of the preceding block. The Elliptic Curve Digital Signature Algorithm (ECDSA) is integral to blockchain, where private keys serve as blockchain accounts.
+
+ECDSA Key Production involves selecting an arbitrary integer, calculating X, and deriving public and private keys for a user. Signature Generation entails choosing an integer, performing calculations, and generating a signature pair for a message. Signature Verification involves verifying a signature against a message through several calculations.
+
 \subsection{Secure Shell (SSH)}
+
+ECC finds three key applications in SSH protocols, particularly in SSH-2. Firstly, ECC facilitates the calculation of equivalent keys through the Diffie-Hellman key exchange algorithm. Secondly, ECC enables server authentication by providing a host key to each server, which is sent to the client during key exchange for verification against a stored fingerprint. Thirdly, ECC allows clients to authenticate each other using Elliptic Curve Digital Signature Algorithm (ECDSA) public keys.
+
 \subsection{Transport Layer Security (TLS)}
+
+Elliptic curves play a crucial role in various aspects of the TLS protocol. The checksum packages specified in RFC 4492 utilize the Diffie-Hellman key exchange, which is based on elliptic curves. The ECDH keys used in TLS can be either long-term, allowing for the reuse of different key exchanges, or short-lived, generating new keys for each exchange. Additionally, TLS certificates include a public key that servers use for authentication.
 
 % ? https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8551161
 % ----------------------------------------------------------------
