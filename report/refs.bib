@@ -118,3 +118,21 @@ author = {R. Padmavathy and Chakravarthy Bhagvati},
 keywords = {Discrete logarithm problem, Index calculus method, Linear sieve, Lanczos method},
 abstract = {This paper presents a new methodology for the pre-computation phase of the index calculus method (ICM), which is a popular attack on solving the Discrete Logarithm Problem (DLP). For a prime field Zp∗ of a multiplicative cyclic group, with a given generator g∈Zp∗ and an element y∈Zp∗, the problem of finding x, such that gx=y(modp), is known as the DLP. The ICM has two steps: pre-computation and individual logarithm computation. In the pre-computation step, the logarithms of elements from a subset of the group, known as a factor base, is computed. In the second step, the DLP is computed with the help of the pre-computed logarithms of a factor base. The present work focuses on the pre-computation step. Three steps that have a significant impact on the performance of the pre-computation step are generating a system of equations on the logarithms of the primes in the factor base, reducing its size for computation efficiency, and solving the system for logarithms of elements in the factor base. It is shown that the performance of ICM is improved through reduction in size of the system of equations producing a smaller size matrix for the third step by combining the reduction and generation steps. The size of the factor base, sieve length (length of elements to be searched for generating the linear relations) and the ratio between the rows and columns in the linear relations are viewed in combination and studied in detail. We have achieved 30%–40% improvement in the performance of ICM. Even for a smaller size problem (≈100 bits), the running time is reduced to 667 s from 937 s.}
 }
+
+@inproceedings{10.1145/2996366.2996371,
+author = {Samotyja, Jacek and Lemke-Rust, Kerstin},
+title = {Practical Results of ECC Side Channel Countermeasures on an ARM Cortex M3 Processor},
+year = {2016},
+isbn = {9781450345750},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi-org.thi.idm.oclc.org/10.1145/2996366.2996371},
+doi = {10.1145/2996366.2996371},
+abstract = {This paper presents implementation results of several side channel countermeasures for protecting the scalar multiplication of ECC (Elliptic Curve Cryptography) implemented on an ARM Cortex M3 processor that is used in security sensitive wireless sensor nodes. Our implementation was done for the ECC curves P-256, brainpool256r1, and Ed25519. Investigated countermeasures include Double-And-Add Always, Montgomery Ladder, Scalar Randomization, Randomized Scalar Splitting, Coordinate Randomization, and Randomized Sliding Window. Practical side channel tests for SEMA (Simple Electromagnetic Analysis) and MESD (Multiple Exponent, Single Data) are included. Though more advanced side channel attacks are not evaluated, yet, our results show that an appropriate level of resistance against the most relevant attacks can be reached.},
+booktitle = {Proceedings of the 2016 ACM Workshop on Theory of Implementation Security},
+pages = {27–35},
+numpages = {9},
+keywords = {side channel countermeasures, scalar multiplication, elliptic curve cryptography, arm cortex M3 processor},
+location = {Vienna, Austria},
+series = {TIS '16}
+}
