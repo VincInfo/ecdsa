@@ -20,22 +20,17 @@ DSA’s key advantage is its efficiency in generating signatures, making it suit
 % * https://ieeexplore.ieee.org/document/5301198
 % ----------------------------------------------------------------
 
-% ----------------------------------------------------------------
-
-% * http://koclab.cs.ucsb.edu/teaching/ecc/project/2015Projects/Levy.pdf
-% * https://ieeexplore.ieee.org/document/5301198
-% ? https://libres.uncg.edu/ir/ecsu/f/Thomas_Johnson_Thesis-Final.pdf
-% ----------------------------------------------------------------
 \subsection{ECDSA (Elliptic Curve Digital Signature Algorithm)}
 
-ECDSA is a variant of the DSA that uses elliptic curve cryptography, offering equivalent security to RSA and DSA but with significantly smaller key sizes. This results in faster computations and reduced resource consumption, making ECDSA highly suitable for resource-constrained environments. ECDSA’s security is based on the elliptic curve discrete logarithm problem, which is currently considered resistant to most forms of cryptographic attack \cite{Xuan2009}.
+ECDSA is a variant of the DSA that uses elliptic curve cryptography, offering equivalent security to RSA and DSA but with significantly smaller key sizes \cite{Xuan2009}. This results in faster computations and reduced resource consumption \cite{Levy}, making ECDSA highly suitable for resource-constrained environments.
 
-The process of generating an ECDSA signature involves creating a hash of the message, selecting a random integer, and performing elliptic curve point multiplication to produce the signature. Verification is achieved by performing elliptic curve operations and ensuring the calculated values match the signature \cite{Xuan2009}.
+% ----------------------------------------------------------------
+
+The ECDSA signature generation process starts by establishing elliptic curve parameters and producing a key pair consisting of a private key and a public key. A hash of the message is computed, and the signature is generated using elliptic curve point multiplication and modular arithmetic using a random selected integer. In the verification process, the signature and public key are received, the hash of the message is recomputed, and the signature is validated by performing elliptic curve computations and checking if the resulting value matches the signature components.
+
+% * https://ieeexplore.ieee.org/document/5301198
+% ----------------------------------------------------------------
 
 \subsection{Comparative Summary}
 
-When comparing these algorithms, RSA is noted for its simplicity and widespread adoption, making it a reliable choice for signature verification tasks. However, its computational intensity for key generation can be a limitation on less powerful devices. DSA offers efficient signature generation but suffers from slower verification speeds, making it less ideal for applications requiring quick authentication \cite{Xuan2009}.
-
-ECDSA stands out due to its efficiency and smaller key sizes, providing strong security with lower computational requirements. This makes ECDSA particularly advantageous for environments where resource constraints are a critical consideration \cite{Xuan2009}.
-
-In conclusion, the optimal choice of a digital signature algorithm depends on the specific requirements of the application. For scenarios prioritizing verification speed, RSA is recommended. For efficient signature generation, DSA can be considered, though with a trade-off in verification speed. ECDSA is generally the best fit for applications needing a balanced approach with robust security and efficient performance \cite{Xuan2009, Levy2024}.
+In summary, RSA, DSA, and ECDSA each present distinct advantages and trade-offs, tailored to varying requirements in digital security practices. RSA is versatile, supporting both encryption and signature functionalities, making it ideal for comprehensive security applications, though it demands significant computational resources. DSA, specialized for digital signatures without encryption capabilities, excels in environments where rapid signature generation is crucial, despite a slower verification process. ECDSA leverages elliptic curve cryptography to provide the same level of security as RSA and DSA but with much smaller key sizes, enhancing performance and making it exceptionally suitable for resource-limited settings. Choosing between these algorithms depends on specific needs regarding computational efficiency, key management, and security level.
