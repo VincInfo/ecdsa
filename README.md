@@ -1,2 +1,0 @@
-# ecdsa
-ecdsa demo implementation
