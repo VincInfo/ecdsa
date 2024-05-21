@@ -1,5 +1,11 @@
 \section{Use Cases}
 % ----------------------------------------------------------------
+\subsubsection{Electronic Commerce (E-commerce)}
+
+Electronic-commerce (e-commerce) heavily relies on the Internet to facilitate transactions between governments, companies, and consumers. While the Internet has significantly boosted the convenience and reach of e-commerce, it has also exposed it to substantial security risks such as hacking, credential replay attacks, and DDoS attacks. These vulnerabilities underscore the need for robust security mechanisms to protect sensitive information and ensure secure transactions.
+
+To address these security challenges, e-commerce platforms have adopted currency signing systems that leverage advanced cryptographic technologies, such as the Elliptic Curve Digital Signature Algorithm (ECDSA). This approach significantly enhances key security features, including authentication, integrity, and non-repudiation, ensuring robust protection for online transactions. 
+
 \subsection{Transportation and Infrastructure}
 
 \subsubsection{Electronic-Vehicular Networks (VANETs)}
@@ -78,26 +84,6 @@ Another approach integrates ECDSA (p224) with the Elliptic Curve Integrated Encr
 
 The adoption of ECC/ECDSA algorithms in E-banking applications is favored due to their high performance, utilizing small keys and efficient computation costs compared to other public key algorithms such as RSA, DSA, and DH.
 
-\subsection{Electronic-Commerce}
-
-Electronic Commerce (E-commerce) is a significant platform for conducting business transactions, sharing information, and buying/selling electronic products and applications via the internet. While the internet has brought numerous benefits, it has also introduced security risks, particularly hacking threats targeting personal and sensitive information for malicious gains.
-
-The rapid development of technology in E-commerce has amplified security risks, necessitating secure signature algorithms capable of handling high volumes of transactions efficiently. Security threats in E-commerce include credential replay attacks, phishing attacks, and Distributed Denial of Service (DDoS) attacks, which pose significant challenges to the integrity and security of online transactions.
-
-To address these security challenges, E-commerce platforms employ various currency signing systems such as Bitcoin, Litecoin, Freicoin, and Peercoin, most of which utilize ECDSA signatures to ensure authentication, integrity, and non-repudiation of transactions.
-
-Researchers have proposed schemes to enhance the security of E-commerce and online transactions, including the development of a graphic processing unit-universal elliptic curve signature server (Guess) using the ECDSA signature mechanism. This scheme aims to provide high-performance signature computations and secure e-payment over the internet, addressing authentication issues between tenants and the server.
-
-Additionally, ECDSA is utilized in implementing two-factor authentication with E-commerce applications, such as Bitcoin wallets, to enhance security and prevent malicious attacks. Randomization techniques are crucial in preventing attackers from discovering secret keys in ECDSA, ensuring the security and integrity of online transactions.
-
-\subsection{Electronic-Vehicular}
-
-Vehicular Ad hoc Networks (VANETs) are essential for ensuring road safety by facilitating communication among vehicles, including police, emergency, and smart taxi cars. VANET applications aim to regulate network traffic, prevent accidents, and enforce road laws, with a focus on protecting passengers. VANET operates through vehicle-to-vehicle (V2V) and vehicle-to-infrastructure (V2I) communication.
-
-Security is a significant challenge for VANET applications due to the open medium in which network nodes share information. To mitigate risks, encryption and signature mechanisms are employed to protect message integrity and authenticity. Various attacks threaten VANET applications, including impersonation, Sybil, modification, DDoS, and replay attacks, necessitating the implementation of confidentiality, integrity, and availability (CIA) security requirements.
-
-The ECDSA algorithm is utilized to authenticate messages within VANET, providing integrity, authentication, and non-repudiation suitable for constrained-source networks. Security analyses have been conducted on ECDSA with VANET applications, focusing on key lengths and curve types to ensure efficiency and adequate security. Additionally, privacy concerns regarding location information and identity in VANET applications are addressed through authentication methods based on ECDSA signatures with pseudonyms, ensuring anonymity and protection against various malicious attacks.
-
 \subsection{Electronic-Governance}
 
 E-governance facilitates the delivery of services to stakeholders through various communication technologies like the internet, SMS, and email, streamlining processes for citizens, businesses, and government agencies. These applications handle four types of transactions: government to citizens (G2C), government to business (G2B), government to employee (G2E), and government to government (G2G), catering to diverse stakeholder data.
@@ -111,31 +97,3 @@ Advanced countries such as the USA, UK, and NATO members utilize ECC/ECDSA to se
 Efficient digital signatures, such as ECDSA, authenticate stakeholders in e-governance systems, providing a robust e-authentication mechanism for citizens to safely handle government documents. Despite leveraging technologies like cloud computing and Big Data to manage large datasets, developers face challenges in ensuring security and privacy.
 
 Proposals include applying ECDSA signatures to protect cloud computing data and utilizing ECC/ECDSA as the best algorithm for signing and encrypting sensitive data transmitted through e-governance applications. While there's no single countermeasure to block all hacker attacks, a combination of countermeasures is necessary to secure data sharing effectively.
-
-
-
-% * https://arxiv.org/pdf/1902.10313  Ab S. 23 
-% ----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-% ----------------------------------------------------------------
-
-\subsection{Signing PDF Documents}
-
-The Portable Document Format (PDF) is widely used for document management, including digital signatures. Digital signatures are increasingly important as more aspects of life transition to digital formats. Despite the growing significance, PDF standards didn't support Elliptic Curve Digital Signature Algorithm (ECDSA) until PDF 2.0. While PDF 2.0 introduces ECDSA support, commonly used PDF applications are yet to fully adopt this standard.
-
-Adobe Acrobat, a leading PDF application, has supported ECDSA signatures since version 11.0, despite the PDF standard's delay in incorporating ECDSA. Adobe's support serves as a de facto reference for other PDF tools and applications.
-
-Although ECDSA implementations are primarily aimed at the cryptocurrency ecosystem, they are adaptable for broader use. However, the choice of elliptic curve is crucial. While many implementations default to secp256k1, used in Bitcoin and Ethereum, PDF requirements necessitate using curves like P-256. Implementations that support P-256, such as ZenGo X, enable ECDSA signatures for PDF documents.
-
-Adjusting implementations for PDF signing, particularly changing the curve to P-256, is feasible and relatively straightforward.
-
-% ? https://is.muni.cz/th/fuwu0/thesis.pdf 
-% ----------------------------------------------------------------
