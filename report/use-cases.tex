@@ -1,11 +1,20 @@
 \section{Use Cases}
 \subsection{Security Protocols and Standards}
 
+% ----------------------------------------------------------------
 \subsubsection{Secure Shell (SSH)}
 
 Secure Shell (SSH) employs Elliptic Curve Cryptography (ECC) in three crucial ways to enhance network security and integrity, for example in the SSH-2 protocol. Firstly, SSH-2 utilizes the Diffie-Hellman key exchange algorithm to generate equivalent keys. During this process, each server is equipped with a unique host key, which is fundamental for the server-client authentication phase. This key is sent to the client during the key exchange, allowing the client to verify its authenticity by comparing the key's fingerprint against a stored value.
 
-Moreover, the server substantiates its identity by signing a transcript of the key exchanges. This signature, potentially created using the Elliptic Curve Digital Signature Algorithm (ECDSA), certifies the integrity of the recorded exchanges and ensures that the communication remains secure. Additionally, this use of ECDSA is not limited to server authentication. Clients also employ ECDSA public keys to authenticate each other. 
+
+\subsubsection{Transport Layer Security (TLS)}
+
+Elliptic curves play a significant role in the application of the Transport Layer Security (TLS) protocol, as detailed in RFC 4492. This protocol specification includes the use of the Diffie-Hellman key exchange algorithm, which is based on elliptic curves. Known as ECDH (Elliptic Curve Diffie-Hellman), this method of key exchange utilizes keys of two distinct types. The first type is long-term keys, which allow for multiple key exchanges to reuse the same keys. The second type is short-lived keys, where each key exchange leads to the generation of new keys.
+Additionally, TLS certificates contain a public key used by servers to authenticate themselves to clients. This authentication is critical for establishing a secure and trusted connection, ensuring that data transmitted over the network remains confidential and integral.
+
+% ? https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8551161
+% ----------------------------------------------------------------
+
 \subsection{Digital Documentation and Cryptography}
 
 \subsubsection{Blockchain}
@@ -107,25 +116,4 @@ Although ECDSA implementations are primarily aimed at the cryptocurrency ecosyst
 Adjusting implementations for PDF signing, particularly changing the curve to P-256, is feasible and relatively straightforward.
 
 % ? https://is.muni.cz/th/fuwu0/thesis.pdf 
-% ----------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-% ----------------------------------------------------------------
-
-\subsection{Secure Shell (SSH)}
-
-ECC finds three key applications in SSH protocols, particularly in SSH-2. Firstly, ECC facilitates the calculation of equivalent keys through the Diffie-Hellman key exchange algorithm. Secondly, ECC enables server authentication by providing a host key to each server, which is sent to the client during key exchange for verification against a stored fingerprint. Thirdly, ECC allows clients to authenticate each other using Elliptic Curve Digital Signature Algorithm (ECDSA) public keys.
-
-\subsection{Transport Layer Security (TLS)}
-
-Elliptic curves play a crucial role in various aspects of the TLS protocol. The checksum packages specified in RFC 4492 utilize the Diffie-Hellman key exchange, which is based on elliptic curves. The ECDH keys used in TLS can be either long-term, allowing for the reuse of different key exchanges, or short-lived, generating new keys for each exchange. Additionally, TLS certificates include a public key that servers use for authentication.
-
-% ? https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8551161
 % ----------------------------------------------------------------
