@@ -1,4 +1,11 @@
 \section{Use Cases}
+\subsection{Security Protocols and Standards}
+
+\subsubsection{Secure Shell (SSH)}
+
+Secure Shell (SSH) employs Elliptic Curve Cryptography (ECC) in three crucial ways to enhance network security and integrity, for example in the SSH-2 protocol. Firstly, SSH-2 utilizes the Diffie-Hellman key exchange algorithm to generate equivalent keys. During this process, each server is equipped with a unique host key, which is fundamental for the server-client authentication phase. This key is sent to the client during the key exchange, allowing the client to verify its authenticity by comparing the key's fingerprint against a stored value.
+
+Moreover, the server substantiates its identity by signing a transcript of the key exchanges. This signature, potentially created using the Elliptic Curve Digital Signature Algorithm (ECDSA), certifies the integrity of the recorded exchanges and ensures that the communication remains secure. Additionally, this use of ECDSA is not limited to server authentication. Clients also employ ECDSA public keys to authenticate each other. 
 \subsection{Digital Documentation and Cryptography}
 
 \subsubsection{Blockchain}
