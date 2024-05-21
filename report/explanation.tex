@@ -150,7 +150,7 @@ Let $\langle G \rangle$ be a cyclic group with the generator $G$. Suppose $G$ ha
 
 \subsubsection{Pollard's Rho-Algorithm}
 \label{subsubsection:pollardsrho}
-The currently best known general attack on the ECDLP is called the Pollard's Rho method. The standart version of this algorithm has the same asymtotic time complexity as the BSGS algorithm, but a much smaller space complexity. 
+The currently best known general attack on the ECDLP is called the Pollard's Rho method. The standard version of this algorithm has the same asymtotic time complexity as the BSGS algorithm, but a much smaller space complexity. 
 The following methodology is based on the the insights provided in \cite{article}.
 Let $\langle G \rangle$ again be a cyclic group. The ECDLP is the same as before: given $G, P \in \langle G \rangle$ find $x$ such that $[x]G = P$. In the Pollard's rho algorithm we would not direclty try to solve the equation $[x]G = P$ but instead try to find integer pairs $(a, b)$ and $(a', b')$ such that $[a]G + [b]P = [a']G + [b']P$. If such pairs are found, the value for $x$ can be deduced:
 $$[a]G + [b]P = [a']G + [b']P$$
