@@ -1,0 +1,39 @@
+\section{Comparison of ECDSA with DSA and RSA}
+
+% ----------------------------------------------------------------
+
+This section primarily relies on \cite{Xuan2009} as a source, with the exception of section \ref{comparison:ecdsa}, which incorporates one additional source. It is also important to note that the text in this section was generated using ChatGPT and subsequently verified with pre-selected sources for accuracy. The footnotes detail the utilization of the generated text in this section.
+
+The three most popular digital signature algorithms RSA, DSA and ECDSA can be used to send information through insecure channels like open networks to ensure data integrity and authenticity. Each of these algorithms has unique characteristics which are suitable for different scenarios, depending on requirements like computational efficiency, key size, and security level. \footnote{This paragraph was first structured using ChatGPT, then refined to ensure complete alignment with the provided source document, omitting any content not explicitly found in the source.}
+
+\subsection{RSA (Rivest–Shamir–Adleman)}
+
+RSA is an algorithm for public-key cryptography invented by Ron Rivest, Adi Shamir, and Leonard Adleman at MIT in 1977. It is the first known algorithm that can be used for both signing and encryption. RSA uses the approach of factoring large integers and employs a pair of keys: a public key for encryption (or verifying a signature) and a private key for decryption (or generating a signature). The signature generation process in RSA involves creating a hash of the message and producing a signature with the sender’s private key. Verification is achieved by decrypting the signature with the sender's private key and comparing it with a newly generated hash of the message that uses the same hash algorithm. \footnote{The paragraph provided by ChatGPT was rewritten and simplified.}
+
+RSA's security strength largely depends on the key size. Computational requirements for RSA are relatively high, especially for key generation and encryption processes, making it less efficient for devices
+with limited processing power.
+
+\subsection{DSA (Digital Signature Algorithm)}
+
+Developed by the National Institute of Standards and Technology (NIST) in 1991, DSA is specifically designed for digital signatures and does not support encryption. DSA (Digital Signature Algorithm) involves selecting a set of mathematical parameters to create a unique pair of keys: a private key for signing messages and a public key for others to verify those signatures. To sign a message, a random number is generated and used with the private key to produce a signature composed of two numbers. When verifying a signature, calculations involving the public key and the message's hash are performed to ensure the signature was made with the corresponding private key and that it matches the content of the message. \footnote{The explanation of the process provided by ChatGPT was initially too brief, prompting a request for a more detailed elaboration.}
+
+DSA’s key advantage is its efficiency in generating signatures, making it suitable for environments where signing speed is critical. However, its verification process is slower compared to RSA, which can be a drawback in scenarios requiring rapid signature verification.
+
+% * https://ieeexplore.ieee.org/document/5301198
+% ----------------------------------------------------------------
+
+\subsection{ECDSA (Elliptic Curve Digital Signature Algorithm)}
+\label{comparison:ecdsa}
+
+ECDSA is a variant of the DSA that uses elliptic curve cryptography, offering equivalent security to RSA and DSA but with significantly smaller key sizes \cite{Xuan2009}. This results in faster computations and reduced resource consumption \cite{Levy2015}, making ECDSA highly suitable for resource-constrained environments.
+
+% ----------------------------------------------------------------
+
+The ECDSA signature generation process starts by establishing elliptic curve parameters and producing a key pair consisting of a private key and a public key. A hash of the message is computed, and the signature is generated using elliptic curve point multiplication and modular arithmetic using a random selected integer \footnote{ChatGPT's overly technical sentence was simplified manually after a confusing revision.}. In the verification process, the signature and public key are received, the hash of the message is recomputed, and the signature is validated by performing elliptic curve computations and checking if the resulting value matches the signature components. \cite{Xuan2009}
+
+% * https://ieeexplore.ieee.org/document/5301198
+% ----------------------------------------------------------------
+
+\subsection{Comparative Summary}
+
+In summary, RSA, DSA, and ECDSA each present distinct advantages and trade-offs, tailored to varying requirements in digital security practices. RSA is versatile, supporting both encryption and signature functionalities, making it ideal for comprehensive security applications, though it demands significant computational resources. DSA, specialized for digital signatures without encryption capabilities, excels in environments where rapid signature generation is crucial, despite a slower verification process. ECDSA leverages elliptic curve cryptography to provide the same level of security as RSA and DSA but with much smaller key sizes, enhancing performance and making it exceptionally suitable for resource-limited settings. Choosing between these algorithms depends on specific needs regarding computational efficiency, key management, and security level.
