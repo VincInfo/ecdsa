@@ -13,9 +13,9 @@ class Signature:
 class Curve: 
     """elliptic curve of the form y^2 = x^3 + a*x + b"""
     def __init__(self, p, a, b):
-        self.p = p      # elliptic Curve exists over the field of integers modulo this prime
-        self.a = a      # the curve parameter a
-        self.b = b      # the curve parameter b
+        self.p = p 
+        self.a = a      
+        self.b = b      
 
 class Point:
     def __init__(self, curve: Curve, x, y):
@@ -55,7 +55,7 @@ class Generator:
         self.G = G
         self.n = n
 
-def hash(file):
+def hash_file(file):
     file_hash = hashlib.sha256()
     with open(file,"r") as f:
         fb = f.read(BLOCK_SIZE)
@@ -63,6 +63,13 @@ def hash(file):
             file_hash.update(fb.encode("utf-8"))
             fb = f.read(BLOCK_SIZE)
     return int.from_bytes(bytes.fromhex(file_hash.hexdigest()), byteorder='big')
+
+def hash_string(s):
+    byte_string = s.encode()
+    sha256_hash = hashlib.sha256()
+    sha256_hash.update(byte_string)
+    # return sha256_hash.hexdigest()
+    return int.from_bytes(bytes.fromhex(sha256_hash.hexdigest()), byteorder='big')
 
 def inv(n, p):
     old_r, r = n, p
@@ -77,7 +84,8 @@ def inv(n, p):
 
 def sign(private_key, m):
 
-    z = hash(m)
+    # z = hash(m)
+    z = hash_string(m)
 
     k = SystemRandom().randint(1, ECDSA.n-1)
     P = k * ECDSA.G
@@ -89,7 +97,8 @@ def sign(private_key, m):
     return Signature(r, s)
 
 def verify(public_key: Point, m: str, sig: Signature):
-    z = hash(m)
+    # z = hash(m)
+    z = hash_string(m)
 
     w = inv(sig.s, ECDSA.n)
 
