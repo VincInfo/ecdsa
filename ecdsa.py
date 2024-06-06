@@ -1,5 +1,9 @@
 import hashlib
+import logging
 from random import SystemRandom
+import loggerConfig
+
+logger = loggerConfig.get_logger()
 
 __all__ = ['ECDSA']
 
@@ -11,7 +15,6 @@ class Signature:
         self.s = s
 
 class Curve: 
-    """elliptic curve of the form y^2 = x^3 + a*x + b"""
     def __init__(self, p, a, b):
         self.p = p 
         self.a = a      
@@ -24,7 +27,6 @@ class Point:
         self.y = y
 
     def __add__(self, other):
-        """group operation of elliptic curves"""
         if self == INF:
             return other
         if other == INF:
@@ -40,7 +42,6 @@ class Point:
         return Point(self.curve, x, y)
     
     def __rmul__(self, k):
-        """calls the group operation the number of k's bits times"""
         result = INF
         append = self
         while k:
@@ -68,7 +69,6 @@ def hash_string(s):
     byte_string = s.encode()
     sha256_hash = hashlib.sha256()
     sha256_hash.update(byte_string)
-    # return sha256_hash.hexdigest()
     return int.from_bytes(bytes.fromhex(sha256_hash.hexdigest()), byteorder='big')
 
 def inv(n, p):
@@ -86,6 +86,7 @@ def sign(private_key, m):
 
     # z = hash(m)
     z = hash_string(m)
+    logger.info(f'signing {m}')
 
     k = SystemRandom().randint(1, ECDSA.n-1)
     P = k * ECDSA.G
@@ -99,6 +100,7 @@ def sign(private_key, m):
 def verify(public_key: Point, m: str, sig: Signature):
     # z = hash(m)
     z = hash_string(m)
+    logger.info(f'verifying {m}')
 
     w = inv(sig.s, ECDSA.n)
 

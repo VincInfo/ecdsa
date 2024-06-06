@@ -6,13 +6,16 @@ import signal
 import socket
 import struct
 import pickle
+import subprocess
 import sys
 import threading
+import time
 from ecdsa import ECDSA, sign, verify
+import loggerConfig
 
 BLOCK_SIZE = 1024
-# message_queue = queue.Queue()
-# running = True
+loggerConfig.queue_listener.start()
+logger = loggerConfig.get_logger()
 
 class Message:
     def __init__(self, public_key, text, signature):
@@ -24,12 +27,13 @@ class MessageHandler:
     conn = None
     addr = None
     threads = []
-    conn = None
     other_name = None
 
     def __init__(self, name, host, port=None):
+        # self.logger = logger
         self.name = name
         self.host = host
+        print(port)
         self.port = port
         self.shutdown_event = threading.Event()
         self.private_key = SystemRandom().randint(1, ECDSA.n-1)
@@ -45,8 +49,8 @@ class MessageHandler:
         self.start_chat()
 
     def start_chat(self):
-        listen_thread = threading.Thread(target=self.start_listen, daemon=True)
-        input_thread = threading.Thread(target=self.start_input, daemon=True)
+        listen_thread = threading.Thread(target=self.start_listen, name=f'{self.name}Thread-listen', daemon=True)
+        input_thread = threading.Thread(target=self.start_input, name=f'{self.name}Thread-input', daemon=True)
 
         self.threads.append(listen_thread)
         self.threads.append(input_thread)
@@ -57,6 +61,9 @@ class MessageHandler:
         [thread.join() for thread in self.threads]
 
         print("all threads joined")
+
+        loggerConfig.queue_listener.stop()
+
 
     def send_message(self, text):
         signature = sign(self.private_key, text)
@@ -126,8 +133,8 @@ class MessageHandler:
                     if not data:
                         break
                     message = pickle.loads(data)
-                    is_valid = verify(message.public_key, message.text, message.signature)
-                    print(f'verifying message: {is_valid}')
+                    if not verify(message.public_key, message.text, message.signature):
+                        break
                     if message.text.lower() == 'exit()':
                         break
                     print(f'[{self.other_name}]: {message.text}')
