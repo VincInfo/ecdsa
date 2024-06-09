@@ -13,23 +13,25 @@ def pollards_rho(P, Q):
     a_0, b_0 = 1, 0
     x_0 = a_0*P + b_0*Q
 
-    x_i_t, a_i_t, b_i_t = x_0, a_0, b_0
-    x_i_h, a_i_h, b_i_h = x_0, a_0, b_0
+    tortoise = x_0, a_0, b_0
+    hare = x_0, a_0, b_0
 
     for i in range(n - 1):
-        x_i_t, a_i_t, b_i_t = f(x_i_t, a_i_t, b_i_t)
-        x_i_h, a_i_h, b_i_h = f(*f(x_i_h, a_i_h, b_i_h))
+        tortoise = f(*tortoise)
+        hare = f(*f(*hare))
+        x_i_t, a_i_t, b_i_t = tortoise
+        x_i_h, a_i_h, b_i_h = hare
         if x_i_t.x == x_i_h.x and x_i_t.y == x_i_h.y:
             if b_i_h != b_i_t:
-                a = (a_i_h - a_i_t) % n # 
-                b = inv(b_i_t - b_i_h, n) % n # 186
+                a = (a_i_h - a_i_t) % n 
+                b = inv(b_i_t - b_i_h, n) % n 
                 k = (a * b) % n
                 return k
             else:
-                print('failed to find a non trivial collision')
+                print('invalid collision')
     print(f'nothing found')
 
-k = 543
+k = 363
 P = ECDSA.G
 Q = k * P
 
