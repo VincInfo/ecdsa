@@ -1,5 +1,4 @@
 import hashlib
-import logging
 from random import SystemRandom
 import loggerConfig
 
@@ -39,7 +38,6 @@ class Point:
             k = (self.y - other.y) * inv(self.x - other.x, self.curve.p)
         x = (k**2 - self.x - other.x) % self.curve.p
         y = (-(k*(x - self.x) + self.y)) % self.curve.p
-        # print(f'({x}, {y})')
         return Point(self.curve, x, y)
     
     def __rmul__(self, k):
@@ -48,13 +46,8 @@ class Point:
         while k:
             if k & 1:
                 result += append
-                # print(f'({result.x}, {result.y})')
             append += append
             k >>= 1
-
-        # for i in range(k):
-        #     # print(i)
-        #     result += append
         return result
     
 class Generator:

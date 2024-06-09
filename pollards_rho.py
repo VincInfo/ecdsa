@@ -1,8 +1,4 @@
-import random
-from sympy import mod_inverse
-from ecdsa import ECDSA, Point, get_y, is_on_curve, inv
-import math
-from sympy import mod_inverse
+from ecdsa import ECDSA, inv
         
 def pollards_rho(P, Q):
     n = 673
@@ -26,15 +22,14 @@ def pollards_rho(P, Q):
         if x_i_t.x == x_i_h.x and x_i_t.y == x_i_h.y:
             if b_i_h != b_i_t:
                 a = (a_i_h - a_i_t) % n # 
-                b = mod_inverse(b_i_t - b_i_h, n) % n # 186
+                b = inv(b_i_t - b_i_h, n) % n # 186
                 k = (a * b) % n
                 return k
             else:
                 print('failed to find a non trivial collision')
-    
     print(f'nothing found')
 
-k = 134
+k = 543
 P = ECDSA.G
 Q = k * P
 
