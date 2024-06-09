@@ -39,6 +39,7 @@ class Point:
             k = (self.y - other.y) * inv(self.x - other.x, self.curve.p)
         x = (k**2 - self.x - other.x) % self.curve.p
         y = (-(k*(x - self.x) + self.y)) % self.curve.p
+        # print(f'({x}, {y})')
         return Point(self.curve, x, y)
     
     def __rmul__(self, k):
@@ -47,8 +48,13 @@ class Point:
         while k:
             if k & 1:
                 result += append
+                # print(f'({result.x}, {result.y})')
             append += append
             k >>= 1
+
+        # for i in range(k):
+        #     # print(i)
+        #     result += append
         return result
     
 class Generator:
@@ -110,18 +116,28 @@ def verify(public_key: Point, m: str, sig: Signature):
     match = P.x == sig.r
     return match
 
-def is_on_curve(x, y, p): 
-    return (y**2) % p == (x**3 + 7) % p
+def is_on_curve(x, y): 
+    print((y**2) % ECDSA.G.curve.p)
+    print((x**3 + 7) % ECDSA.G.curve.p)
+    return (y**2) % ECDSA.G.curve.p == (x**3 + 7) % ECDSA.G.curve.p
+
+def get_y(x):
+    return ((x**3 + 7)**0.5) % ECDSA.G.curve.p
 
 def setup():
-    a = 0x0000000000000000000000000000000000000000000000000000000000000000 
+    # secp256k1
+    a = 0x0000000000000000000000000000000000000000000000000000000000000000
     b = 0x0000000000000000000000000000000000000000000000000000000000000007
     p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
     n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
     Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798
     Gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
-    #n = 2**256 - 2**224 + 2**192 + 2**96 - 1  
-    # secp256k1                                                                                                         
+    # a = 416
+    # b = 569
+    # p = 659
+    # n = p
+    # Gx = 23
+    # Gy = 213
     curve = Curve(p, a, b)
     G = Point(curve, Gx, Gy)
     return Generator(G, n)

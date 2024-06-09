@@ -33,7 +33,6 @@ class MessageHandler:
         # self.logger = logger
         self.name = name
         self.host = host
-        print(port)
         self.port = port
         self.shutdown_event = threading.Event()
         self.private_key = SystemRandom().randint(1, ECDSA.n-1)
