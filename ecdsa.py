@@ -82,10 +82,10 @@ def inv(n, p):
     return old_s % p
 
 def sign(private_key, m):
+    logger.info(f'signing "{m}" with\nprivate key: {private_key}')
 
     # z = hash(m)
     z = hash_string(m)
-    logger.info(f'signing {m}')
 
     k = SystemRandom().randint(1, ECDSA.n-1)
     P = k * ECDSA.G
@@ -97,9 +97,9 @@ def sign(private_key, m):
     return Signature(r, s)
 
 def verify(public_key: Point, m: str, sig: Signature):
+    logger.info(f'verifying "{m}" with\npublic key: {public_key} and\nsignature: (r={sig.r}, s={sig.s})')
     # z = hash(m)
     z = hash_string(m)
-    logger.info(f'verifying {m}')
 
     w = inv(sig.s, ECDSA.n)
 
@@ -110,27 +110,50 @@ def verify(public_key: Point, m: str, sig: Signature):
     return match
 
 def is_on_curve(x, y): 
-    print((y**2) % ECDSA.G.curve.p)
-    print((x**3 + 7) % ECDSA.G.curve.p)
-    return (y**2) % ECDSA.G.curve.p == (x**3 + 7) % ECDSA.G.curve.p
+    # print((y**2) % ECDSA.G.curve.p)
+    # print((x**3 + ECDSA.G.curve.a*x + ECDSA.G.curve.b) % ECDSA.G.curve.p)
+    return (y**2) % ECDSA.G.curve.p == (x**3 + ECDSA.G.curve.a*x + ECDSA.G.curve.b) % ECDSA.G.curve.p
 
 def get_y(x):
     return ((x**3 + 7)**0.5) % ECDSA.G.curve.p
 
 def setup():
     # secp256k1
-    a = 0x0000000000000000000000000000000000000000000000000000000000000000
-    b = 0x0000000000000000000000000000000000000000000000000000000000000007
-    p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
-    n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
-    Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798
-    Gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
+    # a = 0x0000000000000000000000000000000000000000000000000000000000000000
+    # b = 0x0000000000000000000000000000000000000000000000000000000000000007
+    # p = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F
+    # n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141
+    # Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798
+    # Gy = 0x483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8
+
     # a = 416
     # b = 569
     # p = 659
     # n = p
     # Gx = 23
     # Gy = 213
+
+    a = 0
+    b = 7
+    p = 894947
+    n = 149158
+    Gx = 703372
+    Gy = 695470
+
+    # a = 0
+    # b = 7
+    # p = 101
+    # n = 102
+    # Gx = 4
+    # Gy = 24
+
+    # a = 0
+    # b = 7
+    # p = 101
+    # n = 19
+    # Gx = 2
+    # Gy = 22
+
     curve = Curve(p, a, b)
     G = Point(curve, Gx, Gy)
     return Generator(G, n)

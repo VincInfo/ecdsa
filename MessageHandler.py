@@ -65,8 +65,10 @@ class MessageHandler:
 
 
     def send_message(self, text):
+        logger.info(f'prepare sending message: "{text}"')
         signature = sign(self.private_key, text)
         message = Message(self.public_key, text, signature)
+        logger.info(f'sending message object:\npublic key: {({self.public_key.x}, {self.public_key.y})}\ntext: {text}\nsignature: (r={signature.r}, s={signature.s})')
         serialized_message = pickle.dumps(message)
         self.conn.sendall(serialized_message)
 
@@ -132,9 +134,10 @@ class MessageHandler:
                     if not data:
                         break
                     message = pickle.loads(data)
-                    if not verify(message.public_key, message.text, message.signature):
-                        break
                     if message.text.lower() == 'exit()':
+                        break
+                    logger.info(f'received message object:\npublic key: ({message.public_key.x}, {message.public_key.y})\ntext: "{message.text}"\nsignature: (r={message.signature.r}, s={message.signature.s})')
+                    if not verify(message.public_key, message.text, message.signature):
                         break
                     print(f'[{self.other_name}]: {message.text}')
                 except Exception as e:
