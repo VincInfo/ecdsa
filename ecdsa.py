@@ -82,36 +82,45 @@ def inv(n, p):
     return old_s % p
 
 def sign(private_key, m):
-    logger.info(f'signing "{m}" with\nprivate key: {private_key}')
+    logger.info(f'signing m="{m}" with\nprivate key: {private_key}')
 
-    # z = hash(m)
-    z = hash_string(m)
-
+    e = hash_string(m)
     k = SystemRandom().randint(1, ECDSA.n-1)
     P = k * ECDSA.G
+    r = P.x % ECDSA.n
 
-    r = P.x 
-    s = inv(k, ECDSA.n) * (z + private_key * r) % ECDSA.n
-    if s > ECDSA.n / 2:
-        s = ECDSA.n - s
+    s = inv(k, ECDSA.n) * (private_key * r + e) % ECDSA.n
+
+    logger.info(f'calculating k = random([1, n-1])')
+    logger.info(f'calculating (x, y) = [k]G')
+    logger.info(f'calculating r = x mod n')
+    logger.info(f'calculating e = H(m)')
+    logger.info(f'calculating s = k^-1(d*r + e)')
+    logger.info(f'Generated signature:\nr: {r}\ns: {s}')
     return Signature(r, s)
 
 def verify(public_key: Point, m: str, sig: Signature):
-    logger.info(f'verifying "{m}" with\npublic key: {public_key} and\nsignature: (r={sig.r}, s={sig.s})')
-    # z = hash(m)
-    z = hash_string(m)
+    logger.info(f'verifying m="{m}" with\npublic key: (x={public_key.x}, y={public_key.y})\nsignature: (r={sig.r}, s={sig.s})')
 
+    e = hash_string(m)
     w = inv(sig.s, ECDSA.n)
-
-    u1 = z * w % ECDSA.n
+    u1 = e * w % ECDSA.n
     u2 = sig.r * w % ECDSA.n
     P = (u1 * ECDSA.G) + (u2 * public_key)
-    match = P.x == sig.r
+    v = P.x % ECDSA.n
+
+    match = v == sig.r
+
+    logger.info(f'calculating e = H(m)')
+    logger.info(f'calculating w = s^-1')
+    logger.info(f'calculating u_1 = ew')
+    logger.info(f'calculating u_2 = rw')
+    logger.info(f'calculating R = (x, y) = [u_1]G + [u_2]Q')
+    logger.info(f'v = x mod n')
+    logger.info(f'Validating values:\nv: {v}\nr: {sig.r}')
     return match
 
 def is_on_curve(x, y): 
-    # print((y**2) % ECDSA.G.curve.p)
-    # print((x**3 + ECDSA.G.curve.a*x + ECDSA.G.curve.b) % ECDSA.G.curve.p)
     return (y**2) % ECDSA.G.curve.p == (x**3 + ECDSA.G.curve.a*x + ECDSA.G.curve.b) % ECDSA.G.curve.p
 
 def get_y(x):
@@ -135,24 +144,10 @@ def setup():
 
     a = 0
     b = 7
-    p = 894947
-    n = 149158
-    Gx = 703372
-    Gy = 695470
-
-    # a = 0
-    # b = 7
-    # p = 101
-    # n = 102
-    # Gx = 4
-    # Gy = 24
-
-    # a = 0
-    # b = 7
-    # p = 101
-    # n = 19
-    # Gx = 2
-    # Gy = 22
+    p = 86287
+    n = 86079
+    Gx = 76195
+    Gy = 66327
 
     curve = Curve(p, a, b)
     G = Point(curve, Gx, Gy)

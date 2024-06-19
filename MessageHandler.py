@@ -30,13 +30,13 @@ class MessageHandler:
     other_name = None
 
     def __init__(self, name, host, port=None):
-        # self.logger = logger
+        self.logger = logger
         self.name = name
         self.host = host
         self.port = port
-        self.shutdown_event = threading.Event()
         self.private_key = SystemRandom().randint(1, ECDSA.n-1)
         self.public_key = self.private_key * ECDSA.G
+        self.shutdown_event = threading.Event()
         signal.signal(signal.SIGINT, self.signal_handler)
 
     def accept(self):
@@ -63,12 +63,10 @@ class MessageHandler:
 
         loggerConfig.queue_listener.stop()
 
-
     def send_message(self, text):
-        logger.info(f'prepare sending message: "{text}"')
         signature = sign(self.private_key, text)
         message = Message(self.public_key, text, signature)
-        logger.info(f'sending message object:\npublic key: {({self.public_key.x}, {self.public_key.y})}\ntext: {text}\nsignature: (r={signature.r}, s={signature.s})')
+        logger.info(f'sending message object:\npublic key: (x={self.public_key.x}, y={self.public_key.y})\ntext: "{text}"\nsignature: (r={signature.r}, s={signature.s})')
         serialized_message = pickle.dumps(message)
         self.conn.sendall(serialized_message)
 
@@ -129,15 +127,15 @@ class MessageHandler:
         # global running
         try:
             while not self.shutdown_event.is_set(): 
-                try:
+                try:      
                     data = self.conn.recv(1024)
                     if not data:
                         break
                     message = pickle.loads(data)
                     if message.text.lower() == 'exit()':
                         break
-                    logger.info(f'received message object:\npublic key: ({message.public_key.x}, {message.public_key.y})\ntext: "{message.text}"\nsignature: (r={message.signature.r}, s={message.signature.s})')
                     if not verify(message.public_key, message.text, message.signature):
+                        logger.info('signature verification failed')
                         break
                     print(f'[{self.other_name}]: {message.text}')
                 except Exception as e:
@@ -150,6 +148,10 @@ class MessageHandler:
             self.shutdown_event.set()
 
     def start_input(self):
+        if self.name == 'Alice':
+            time.sleep(1)
+        logger.info(f'generated random private key:\nprivate_key = {self.private_key}')
+        logger.info(f'calculating public key [private_key]G:\npublic_key = (x={self.public_key.x}, y={self.public_key.y})') 
         # global running
         try:
             while not self.shutdown_event.is_set():

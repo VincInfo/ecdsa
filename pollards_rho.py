@@ -1,11 +1,8 @@
 from random import SystemRandom
 import time
-from ecdsa import ECDSA, Point, inv, get_y, is_on_curve
-from sympy.ntheory import factorint
+from ecdsa import ECDSA, inv, get_y, is_on_curve
         
 def pollards_rho(P, Q):
-    # n = 673
-    # n = point_order(P)
     n = ECDSA.n
     def f(x_i, a_i, b_i):
         if x_i.x == None or x_i.x % 3 == 0:
@@ -16,14 +13,12 @@ def pollards_rho(P, Q):
             return (Q + x_i, a_i, (b_i + 1) % n)
 
     a_0, b_0 = SystemRandom().randint(1, n-1), SystemRandom().randint(1, n-1)
-    # print(f'retrying with {a_0}, {b_0}')
     x_0 = a_0*P + b_0*Q
 
     tortoise = x_0, a_0, b_0
     hare = x_0, a_0, b_0
 
     for i in range(n - 1):
-        # print(f'i: {i}')
         tortoise = f(*tortoise)
         hare = f(*f(*hare))
         x_i_t, a_i_t, b_i_t = tortoise
@@ -49,7 +44,6 @@ def find_point_on_curve():
 def point_order(P):
     k = 1
     while True:
-        # print(f'k: {k}')
         p = k * P
         if p.x == None and p.y == None:
             return k
@@ -59,22 +53,20 @@ def find_random_point_between(xs, xe, ys, ye):
     p = (None, None)
     for x in range(xs, xe):
         for y in range(ys, ye):
-            # print(x, y)
             if is_on_curve(x, y):
                 print('found point')
                 p = (x % ECDSA.G.curve.p, y % ECDSA.G.curve.p)
-                # return p
     return p
 
-ps = 100
+ps = 10
 P = ECDSA.G
 print(is_on_curve(P.x, P.y))
-# n = point_order(P)
 n = ECDSA.n
+# n = point_order(P)
 p = ECDSA.G.curve.p
-# print(f'order: {n}')
+print(f'order: {n}')
 
-# s = 200000
+# s = 20000
 # x_from = p - s
 # y_from = p - s
 # x_to = p - s + 10000
@@ -84,64 +76,47 @@ p = ECDSA.G.curve.p
 #     print('nothing found')
 #     exit()
 # P = Point(ECDSA.G.curve, x, y)
-# Q = k * P
-
-# print(f'k: {k}')
 # print(f'P: ({P.x}, {P.y})')
-# print(f'Q: ({Q.x}, {Q.y}) = [k]P')
+
 
 # print(is_on_curve(P.x, P.y))
 # print(is_on_curve(Q.x, Q.y))
 
-for p in range(ps):
-    k = SystemRandom().randint(1, n-1)
-    Q = k * P
-    # print(f'P: ({P.x}, {P.y})')
+def find_k():
+    for p in range(ps):
+        k = SystemRandom().randint(1, n-1)
+        Q = k * P
+        print()
+        print(f'k: {k}')
+        print(f'P: ({P.x}, {P.y})')
+        print(f'Q: ({Q.x}, {Q.y}) = [k]P')
+        print('searching k...')
 
-    # print(is_on_curve(P.x, P.y))
+        # check = False
+        start_time_pollard = time.time()
+        while True:
+            k_found = pollards_rho(P, Q)
+            Q_found = k_found * P 
+            # check = Q_found.x == Q.x and Q_found.y == Q.y
+            # print(f'control: [{k_found}]P = ({Q_found.x}, {Q_found.y})', end=' ')
+            # print(f'== Q ==> correct') if check else print(f'!= Q ==> wrong')
+            if Q_found.x == Q.x and Q_found.y == Q.y:
+                print(f'pollards rho found: {k_found}')
+                break
+        end_time_pollard = time.time()
 
-    # print(is_on_curve(2, 63))
-    # print(get_y(2))
+        start_time_brute_force = time.time()
+        for i in range(n):
+            R = i * P
+            if R.x == Q.x and R.y == Q.y:
+                print(f'brute force found: {i}')
+                break
+        end_time_brute_force = time.time()
 
-    print(f'k: {k}')
-    print(f'P: ({P.x}, {P.y})')
-    print(f'Q: ({Q.x}, {Q.y}) = [k]P')
-
-    # o = point_order(P)
-    print(f'order: {n}')
-    point = n * P
-    print(f'[{n}]P = ({point.x}, {point.y})')
-
-    print('searching k...')
-    print()
-    check = False
-    start_time_pollard = time.time()
-    while not check:
-        k_found = pollards_rho(P, Q)
-        # print(f'k found: k = {k_found}')
-        Q_found = k_found * P 
-        check = Q_found.x == Q.x and Q_found.y == Q.y
-        # print(f'control: [{k_found}]P = ({Q_found.x}, {Q_found.y})', end=' ')
-        # print(f'== Q ==> correct') if check else print(f'!= Q ==> wrong')
-        if check:
-            print(f'found: {k_found}')
-            break
-        # else:
-        #     print('retrying')
-    end_time_pollard = time.time()
-
-    start_time_brute_force = time.time()
-    for i in range(n):
-        R = i * P
-        if R.x == Q.x and R.y == Q.y:
-            print(f'found: {i}')
-            break
-    end_time_brute_force = time.time()
-
-    time_pollard = end_time_pollard - start_time_pollard
-    time_brute_force = end_time_brute_force - start_time_brute_force
-    print(f'pollards rho: {time_pollard}')
-    print(f'brute force: {time_brute_force}')
-        
-
+        time_pollard = end_time_pollard - start_time_pollard
+        time_brute_force = end_time_brute_force - start_time_brute_force
+        print(f'time - pollards rho: {time_pollard}s')
+        print(f'time - brute force: {time_brute_force}s')
+            
+find_k()
 
