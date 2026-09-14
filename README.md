@@ -27,3 +27,12 @@ On Windows this opens Alice, Bob, and a live log window.
 ```bash
 python pollards_rho.py
 ```
+
+## Plots
+
+Scripts for the report figures. Needs `matplotlib` and `numpy`.
+
+```bash
+python plot1.py   # group operation points
+python plot2.py   # points mapped onto a torus
+```
